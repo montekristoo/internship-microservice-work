@@ -1,2 +1,9 @@
-package com.mall.service.repository;public interface UserRepository {
+package com.mall.service.repository;
+
+import com.mall.service.entity.UserEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
 }
