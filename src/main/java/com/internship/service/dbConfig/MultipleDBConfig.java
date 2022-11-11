@@ -1,4 +1,4 @@
-package com.mall.service;
+package com.internship.service.dbConfig;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -27,6 +27,12 @@ public class MultipleDBConfig {
     @Bean
     @ConfigurationProperties(prefix = "third.datasource")
     public DataSource thirdDbConfig() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Bean
+    @ConfigurationProperties(prefix = "four.datasource")
+    public DataSource fourDbConfig() {
         return DataSourceBuilder.create().build();
     }
 
