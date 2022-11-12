@@ -1,19 +1,14 @@
 package com.internship.service.dbConfig;
 
-import com.internship.service.entity.DbModel;
+import com.internship.service.entity.DbEntity;
 import com.internship.service.service.DataSourceService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
-import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -38,7 +33,7 @@ public class MultipleDBConfig {
         return routerDataSource;
     }
 
-    public List<DbModel> getDbsInfo() throws SQLException {
+    public List<DbEntity> getDbsInfo() throws SQLException {
         return dataSourceService.findAll();
     }
 
@@ -50,11 +45,11 @@ public class MultipleDBConfig {
         return result;
     }
 
-    public DataSource createDataSource(DbModel dbModel) {
+    public DataSource createDataSource(DbEntity dbEntity) {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(dbModel.getJdbcUrl());
-        config.setUsername(dbModel.getUsername());
-        config.setPassword(dbModel.getPassword());
+        config.setJdbcUrl(dbEntity.getJdbcUrl());
+        config.setUsername(dbEntity.getUsername());
+        config.setPassword(dbEntity.getPassword());
         return new HikariDataSource(config);
     }
 

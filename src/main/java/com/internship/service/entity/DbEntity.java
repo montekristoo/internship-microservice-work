@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DbModel {
+public class DbEntity {
     private Long id;
     private String name;
     private String username;
