@@ -16,11 +16,8 @@ import java.util.Map;
 @Service
 public class TaskService {
 
-    private RouterDataSource routerDataSource = new RouterDataSource();
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private Map<String, DataSource> dataSource;
     private String sql = "INSERT INTO users (first_name) VALUES ('test_user');";
     @Scheduled(fixedDelay = 2000)
     public void insertIntoDb1() {
