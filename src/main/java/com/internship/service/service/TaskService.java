@@ -1,22 +1,20 @@
-package com.internship.service.dbConfig;
+package com.internship.service.service;
 
 
+import com.internship.service.dbConfig.RouterDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
 import java.util.Map;
 
 
 @EnableScheduling
 @Service
-public class TedService {
+public class TaskService {
 
     private RouterDataSource routerDataSource = new RouterDataSource();
     @Autowired
