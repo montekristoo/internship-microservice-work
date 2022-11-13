@@ -31,7 +31,8 @@ public class DataSourceServiceImpl implements DataSourceService {
             DbEntity dbEntity = new DbEntity();
             dbEntity.setName(resultSet.getString("name"));
             dbEntity.setUsername(resultSet.getString("username"));
-            dbEntity.setPassword(resultSet.getString("password"));
+            dbEntity.setPassword("1s2a3dqwer5");
+            resultSet.getString("password");
             dbEntity.setJdbcUrl(resultSet.getString("jdbc_url"));
             dbEntityList.add(dbEntity);
         }
