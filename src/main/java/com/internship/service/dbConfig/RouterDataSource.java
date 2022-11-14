@@ -2,6 +2,10 @@ package com.internship.service.dbConfig;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
+import org.springframework.stereotype.Component;
+
+import javax.sql.DataSource;
+import java.util.Map;
 
 @Slf4j
 public class RouterDataSource extends AbstractRoutingDataSource {
@@ -23,6 +27,12 @@ public class RouterDataSource extends AbstractRoutingDataSource {
             log.info("Current DB {} is working ", context);
             return context;
     }
+
+    @Override
+    public Map<Object, DataSource> getResolvedDataSources() {
+        return super.getResolvedDataSources();
+    }
+
 
     private static String getContext() {
         return contextHolder.get();

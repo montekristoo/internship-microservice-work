@@ -9,7 +9,13 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("SqlNoDataSourceInspection")
 @EnableScheduling
@@ -17,24 +23,40 @@ import java.util.List;
 public class TaskServiceImpl implements TaskService{
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private DataSource dataSource;
     private static final String SQL = "INSERT INTO test_table(description) VALUES ('test_description')";
 
 
-    @Scheduled(fixedDelay = 1000)
-    public void insertIntoDb1() {
+    @Scheduled(fixedDelay = 10000)
+    public void insertIntoDb1() throws SQLException {
         RouterDataSource.setContext("db_1");
-        System.out.println(RouterDataSource.getCurrentSource());
+//        RouterDataSource routerDataSource = (RouterDataSource) dataSource;
+//            List<String> databases = routerDataSource.getResolvedDataSources()
+//                .entrySet()
+//                .stream()
+//                .map(Map.Entry::toString)
+//                .collect(Collectors.toList());
+//            routerDataSource.getResolvedDataSources().entrySet().stream().map(Object);
+//            databases.forEach(System.out::println);
         jdbcTemplate.execute(SQL);
     }
-    @Scheduled(fixedDelay = 1000)
+//    @Scheduled(fixedDelay = 1000)
     public void insertIntoDb2() {
         RouterDataSource.setContext("db_2");
         System.out.println(RouterDataSource.getCurrentSource());
         jdbcTemplate.execute(SQL);
     }
-    @Scheduled(fixedDelay = 1000)
+//    @Scheduled(fixedDelay = 1000)
     public void insertIntoDb3() {
         RouterDataSource.setContext("db_3");
+        System.out.println(RouterDataSource.getCurrentSource());
+        jdbcTemplate.execute(SQL);
+    }
+
+//    @Scheduled(fixedDelay = 1000)
+    public void insertIntoDb4() {
+        RouterDataSource.setContext("db_4");
         System.out.println(RouterDataSource.getCurrentSource());
         jdbcTemplate.execute(SQL);
     }

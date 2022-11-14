@@ -1,11 +1,15 @@
 package com.internship.service.service;
 
+import com.internship.service.dbConfig.RouterDataSource;
 import com.internship.service.entity.DbEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
 import java.sql.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DataSourceServiceImpl implements DataSourceService {
@@ -16,13 +20,16 @@ public class DataSourceServiceImpl implements DataSourceService {
     private static final String MAIN_PASSWORD = "internship";
     private static final String OTHER_DB_PASSWORD = "internship";
 
+
     @Override
     public Set<DbEntity> findAll() throws SQLException {
+
         Set<DbEntity> dbEntityList = new HashSet<>();
         ResultSet resultSet = getResultsFromConnectionQuery();
         while (resultSet.next()) {
             DbEntity dbEntity = new DbEntity();
             dbEntity.setName(resultSet.getString("name"));
+            System.out.println(dbEntity.getName());
             dbEntity.setUsername(resultSet.getString("username"));
             dbEntity.setPassword(OTHER_DB_PASSWORD);
             resultSet.getString("password");
@@ -37,5 +44,15 @@ public class DataSourceServiceImpl implements DataSourceService {
         PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_DATA);
         return preparedStatement.executeQuery();
     }
+
+//    public List<String> getExistingDatabases() {
+//        if (dataSource == null) {
+//
+//            return new ArrayList<>();
+//        }
+//        else {
+//
+//        }
+//    }
 
 }

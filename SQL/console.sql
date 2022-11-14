@@ -21,7 +21,7 @@ ALTER SEQUENCE databases_id_seq
 TRUNCATE TABLE databases;
 
 INSERT INTO databases (name, username, password, jdbc_url)
-VALUES ('db_3', 'postgres', '1s2a3dqwer5', 'jdbc:postgresql://localhost:5432/db_3'),
+VALUES ('db_1', 'postgres', '1s2a3dqwer5', 'jdbc:postgresql://localhost:5432/db_1'),
        ('db_2', 'postgres', '1s2a3dqwer5', 'jdbc:postgresql://localhost:5432/db_2'),
        ('db_3', 'postgres', '1s2a3dqwer5', 'jdbc:postgresql://localhost:5432/db_3');
 

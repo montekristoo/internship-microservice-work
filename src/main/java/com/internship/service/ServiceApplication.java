@@ -1,5 +1,8 @@
 package com.internship.service;
 
+import com.zaxxer.hikari.HikariDataSource;
+import com.zaxxer.hikari.HikariPoolMXBean;
+import com.zaxxer.hikari.pool.HikariPool;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,7 +23,6 @@ public class ServiceApplication {
             context.close();
             context = SpringApplication.run(ServiceApplication.class, args.getSourceArgs());
         });
-
         thread.setDaemon(false);
         thread.start();
     }
