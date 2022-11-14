@@ -4,34 +4,27 @@ import com.internship.service.entity.DbEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class DataSourceServiceImpl implements DataSourceService {
 
-    @Override
-    public DbEntity findByName(String name) {
-//        String sql = "SELECT * FROM databases WHERE name = ?";
-//        return jdbcTemplate.queryForObject(sql, new DbMapper(), new Object[]{name});
-        return null;
-    }
+    private static final String DB_URL = "jdbc:postgresql://localhost:3002/main_db";
+    private static final String USERNAME = "postgres";
+    private static final String SQL_GET_DATA = "SELECT * FROM databases;";
+    private static final String MAIN_PASSWORD = "internship";
+    private static final String OTHER_DB_PASSWORD = "internship";
 
     @Override
-    public List<DbEntity> findAll() throws SQLException {
-        String url = "jdbc:postgresql://localhost:5432/settings";
-        String username = "postgres";
-        String password = "1s2a3dqwer5";
-        String sql = "SELECT * FROM databases;";
-        Connection connection = DriverManager.getConnection(url, username, password);
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        List<DbEntity> dbEntityList = new ArrayList<>();
+    public Set<DbEntity> findAll() throws SQLException {
+        Set<DbEntity> dbEntityList = new HashSet<>();
+        ResultSet resultSet = getResultsFromConnectionQuery();
         while (resultSet.next()) {
             DbEntity dbEntity = new DbEntity();
             dbEntity.setName(resultSet.getString("name"));
             dbEntity.setUsername(resultSet.getString("username"));
-            dbEntity.setPassword("1s2a3dqwer5");
+            dbEntity.setPassword(OTHER_DB_PASSWORD);
             resultSet.getString("password");
             dbEntity.setJdbcUrl(resultSet.getString("jdbc_url"));
             dbEntityList.add(dbEntity);
@@ -39,5 +32,10 @@ public class DataSourceServiceImpl implements DataSourceService {
         return dbEntityList;
     }
 
+    private ResultSet getResultsFromConnectionQuery() throws SQLException {
+        Connection connection = DriverManager.getConnection(DB_URL, USERNAME, MAIN_PASSWORD);
+        PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_DATA);
+        return preparedStatement.executeQuery();
+    }
 
 }
