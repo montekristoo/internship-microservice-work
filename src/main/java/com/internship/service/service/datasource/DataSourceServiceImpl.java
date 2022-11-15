@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Service
 @RefreshScope
 public class DataSourceServiceImpl implements DataSourceService {
-    private static final String DB_URL = "jdbc:postgresql://localhost:5432/settings";
+    private static final String DB_URL = "jdbc:postgresql://localhost:3002/main_db";
     private static final String USERNAME = "postgres";
     private static final String SQL_GET_DATA = "SELECT * FROM databases;";
     private static final String MAIN_PASSWORD = "internship";

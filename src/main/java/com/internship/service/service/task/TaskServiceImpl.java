@@ -24,8 +24,6 @@ import java.util.stream.Collectors;
 public class TaskServiceImpl implements TaskService{
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private DataSource dataSource;
     private static final String SQL = "INSERT INTO test_table(description) VALUES ('test_description')";
 
 
