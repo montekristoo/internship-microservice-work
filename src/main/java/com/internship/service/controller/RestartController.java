@@ -10,8 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/")
 public class RestartController {
 
+    private final RestartService restartService;
+
     @Autowired
-    private RestartService restartService;
+    public RestartController(RestartService restartService) {
+        this.restartService = restartService;
+    }
 
     @GetMapping("restart")
     public void restart() {

@@ -21,8 +21,13 @@ import java.lang.reflect.Method;
 @Slf4j
 @Component
 public class DataSourceAspect {
+    private final DataSource dataSource;
+
     @Autowired
-    private DataSource dataSource;
+    public DataSourceAspect(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
     @Pointcut("@annotation(com.internship.service.annotations.ChangeDatabase)")
     public void annotationPointCut() {
     }

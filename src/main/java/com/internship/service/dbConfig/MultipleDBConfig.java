@@ -5,6 +5,7 @@ import com.internship.service.entity.DataSourceEntity;
 import com.internship.service.service.datasource.DataSourceService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 
 import javax.sql.DataSource;
@@ -18,6 +19,7 @@ public class MultipleDBConfig {
 
     private final DataSourceService dataSourceService;
 
+    @Autowired
     public MultipleDBConfig(DataSourceService dataSourceService) {
         this.dataSourceService = dataSourceService;
     }

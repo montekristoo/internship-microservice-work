@@ -10,10 +10,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/")
 public class DataSourceController {
+    private final DataSourceService dataSourceService;
+    private final RestartService restartService;
+
     @Autowired
-    private DataSourceService dataSourceService;
-    @Autowired
-    private RestartService restartService;
+    public DataSourceController(DataSourceService dataSourceService, RestartService restartService) {
+        this.dataSourceService = dataSourceService;
+        this.restartService = restartService;
+    }
 
     @ChangeDatabase(value = "main_db")
     @PostMapping("databases")

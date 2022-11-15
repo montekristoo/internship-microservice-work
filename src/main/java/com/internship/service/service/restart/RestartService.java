@@ -13,10 +13,14 @@ import java.sql.SQLException;
 
 @Service
 public class RestartService {
+    private final RestartEndpoint restartEndpoint;
+    private final DataSource dataSource;
+
     @Autowired
-    private RestartEndpoint restartEndpoint;
-    @Autowired
-    private DataSource dataSource;
+    public RestartService(RestartEndpoint restartEndpoint, DataSource dataSource) {
+        this.restartEndpoint = restartEndpoint;
+        this.dataSource = dataSource;
+    }
 
     public void restartApp() {
         ((RouterDataSource) dataSource).getResolvedDataSources().forEach((k, v) -> {
