@@ -25,6 +25,12 @@ VALUES ('db_1', 'postgres', 'internship', 'jdbc:postgresql://localhost:5432/db_1
        ('db_2', 'postgres', 'internship', 'jdbc:postgresql://localhost:5432/db_2'),
        ('db_3', 'postgres', 'internship', 'jdbc:postgresql://localhost:5432/db_3');
 
+INSERT INTO databases (name, username, password, jdbc_url)
+VALUES ('db_4', 'postgres', 'internship', 'jdbc:postgresql://localhost:5432/db_4');
+
+DELETE FROM databases
+    WHERE name = 'db_4';
+
 UPDATE databases
 SET password = crypt(password, gen_salt('bf'));
 
@@ -36,9 +42,13 @@ FROM databases;
 SELECT * FROM pg_stat_activity;
 
 DELETE FROM databases
-WHERE name = 'db_3';
+WHERE name = 'db_4';
 
 SELECT * FROM databases;
 
 SELECT COUNT(*) FROM pg_stat_activity;
 
+CREATE DATABASE db_4;
+
+SELECT COUNT(*) FROM pg_stat_activity
+WHERE datname = 'db_3';

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,6 +26,8 @@ class TaskServiceTests {
         RouterDataSource.setContext("db_2");
         taskService.truncateTable();
         RouterDataSource.setContext("db_3");
+        taskService.truncateTable();
+        RouterDataSource.setContext("db_4");
         taskService.truncateTable();
     }
 
@@ -50,7 +53,7 @@ class TaskServiceTests {
     }
 
     @Test
-    public void givenCurrentDb1ToConnect_thenInsertNewDataInTable_thenCheckIfDataAreInsertedInCorrectDb() {
+    public void givenCurrentDb1ToConnect_thenInsertNewDataInTable_thenCheckIfDataAreInsertedInCorrectDb() throws SQLException {
         taskService.insertIntoDb1();
         List<TaskEntity> tasksFromDb1 = taskService.getAll();
         assertEquals(tasksFromDb1.size(), 1);

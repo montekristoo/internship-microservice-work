@@ -4,6 +4,8 @@ import com.internship.service.entity.DbEntity;
 import com.internship.service.service.DataSourceService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.*;
 
 import javax.sql.DataSource;
@@ -22,6 +24,7 @@ public class MultipleDBConfig {
     }
 
     @Bean
+    @Primary
     public DataSource getDataSource() throws SQLException {
         final Map<Object, Object> dataSources = this.createDataSources();
         final RouterDataSource routerDataSource = new RouterDataSource();
@@ -42,11 +45,12 @@ public class MultipleDBConfig {
     }
 
     public DataSource createDataSource(DbEntity dbEntity) {
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(dbEntity.getJdbcUrl());
-        config.setUsername(dbEntity.getUsername());
-        config.setPassword(dbEntity.getPassword());
-        return new HikariDataSource(config);
+        return DataSourceBuilder.create()
+                .username(dbEntity.getUsername())
+                .password(dbEntity.getPassword())
+                .username(dbEntity.getUsername())
+                .url(dbEntity.getJdbcUrl())
+                .build();
     }
 
 }

@@ -2,7 +2,9 @@ package com.internship.service.service;
 
 import com.internship.service.dbConfig.RouterDataSource;
 import com.internship.service.entity.DbEntity;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +14,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@RefreshScope
 public class DataSourceServiceImpl implements DataSourceService {
-
-    private static final String DB_URL = "jdbc:postgresql://localhost:3002/main_db";
+    private static final String DB_URL = "jdbc:postgresql://localhost:5432/settings";
     private static final String USERNAME = "postgres";
     private static final String SQL_GET_DATA = "SELECT * FROM databases;";
     private static final String MAIN_PASSWORD = "internship";
@@ -23,7 +25,6 @@ public class DataSourceServiceImpl implements DataSourceService {
 
     @Override
     public Set<DbEntity> findAll() throws SQLException {
-
         Set<DbEntity> dbEntityList = new HashSet<>();
         ResultSet resultSet = getResultsFromConnectionQuery();
         while (resultSet.next()) {
@@ -44,15 +45,5 @@ public class DataSourceServiceImpl implements DataSourceService {
         PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_DATA);
         return preparedStatement.executeQuery();
     }
-
-//    public List<String> getExistingDatabases() {
-//        if (dataSource == null) {
-//
-//            return new ArrayList<>();
-//        }
-//        else {
-//
-//        }
-//    }
 
 }
