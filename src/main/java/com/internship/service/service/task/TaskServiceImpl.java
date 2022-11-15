@@ -1,10 +1,12 @@
-package com.internship.service.service;
+package com.internship.service.service.task;
 
+import com.internship.service.annotations.ChangeDatabase;
 import com.internship.service.dbConfig.RouterDataSource;
 import com.internship.service.entity.TaskEntity;
-import com.zaxxer.hikari.HikariDataSource;
-import com.zaxxer.hikari.HikariPoolMXBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -12,42 +14,44 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 @EnableScheduling
 @Service
-public class TaskServiceImpl implements TaskService{
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+public class TaskServiceImpl implements TaskService {
+    private final JdbcTemplate jdbcTemplate;
     private static final String SQL = "INSERT INTO test_table(description) VALUES ('test_description')";
+    private final int TIMER = 2000;
 
+    @Autowired
+    public TaskServiceImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
-    @Scheduled(fixedDelay = 2000)
+    @ChangeDatabase(value = "db_1")
+    @Scheduled(fixedDelay = TIMER)
     public void insertIntoDb1() {
-        RouterDataSource.setContext("db_1");
-        jdbcTemplate.execute(SQL);
-    }
-    @Scheduled(fixedDelay = 2000)
-    public void insertIntoDb2() {
-        RouterDataSource.setContext("db_2");
-        System.out.println(RouterDataSource.getCurrentSource());
-        jdbcTemplate.execute(SQL);
-    }
-    @Scheduled(fixedDelay = 2000)
-    public void insertIntoDb3() {
-        RouterDataSource.setContext("db_3");
         jdbcTemplate.execute(SQL);
     }
 
-    @Scheduled(fixedDelay = 2000)
+    @ChangeDatabase(value = "db_2")
+    @Scheduled(fixedDelay = TIMER)
+    public void insertIntoDb2() {
+        jdbcTemplate.execute(SQL);
+    }
+
+    @ChangeDatabase(value = "db_3")
+    @Scheduled(fixedDelay = TIMER)
+    public void insertIntoDb3() {
+        jdbcTemplate.execute(SQL);
+    }
+
+    @ChangeDatabase(value = "db_4")
+    @Scheduled(fixedDelay = TIMER)
     public void insertIntoDb4() {
-        RouterDataSource.setContext("db_4");
-        System.out.println(RouterDataSource.getCurrentSource());
+        if (!RouterDataSource.getCurrentSource().equals("db_4")) {
+            return;
+        }
         jdbcTemplate.execute(SQL);
     }
 

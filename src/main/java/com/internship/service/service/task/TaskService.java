@@ -1,4 +1,4 @@
-package com.internship.service.service;
+package com.internship.service.service.task;
 
 import com.internship.service.entity.TaskEntity;
 

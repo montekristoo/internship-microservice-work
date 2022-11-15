@@ -1,43 +1,47 @@
-package com.internship.service.service;
+package com.internship.service.service.datasource;
 
-import com.internship.service.dbConfig.RouterDataSource;
-import com.internship.service.entity.DbEntity;
-import com.zaxxer.hikari.HikariDataSource;
+import com.internship.service.entity.DataSourceEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
 import java.sql.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RefreshScope
 public class DataSourceServiceImpl implements DataSourceService {
+    private final JdbcTemplate jdbcTemplate;
     private static final String DB_URL = "jdbc:postgresql://localhost:3002/main_db";
     private static final String USERNAME = "postgres";
     private static final String SQL_GET_DATA = "SELECT * FROM databases;";
     private static final String MAIN_PASSWORD = "internship";
     private static final String OTHER_DB_PASSWORD = "internship";
 
+    @Autowired
+    @Lazy
+    public DataSourceServiceImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
 
     @Override
-    public Set<DbEntity> findAll() throws SQLException {
-        Set<DbEntity> dbEntityList = new HashSet<>();
+    public Set<DataSourceEntity> findAll() throws SQLException {
+        Set<DataSourceEntity> dataSourceEntityList = new HashSet<>();
         ResultSet resultSet = getResultsFromConnectionQuery();
         while (resultSet.next()) {
-            DbEntity dbEntity = new DbEntity();
-            dbEntity.setName(resultSet.getString("name"));
-            System.out.println(dbEntity.getName());
-            dbEntity.setUsername(resultSet.getString("username"));
-            dbEntity.setPassword(OTHER_DB_PASSWORD);
+            DataSourceEntity dataSourceEntity = new DataSourceEntity();
+            dataSourceEntity.setName(resultSet.getString("name"));
+            System.out.println(dataSourceEntity.getName());
+            dataSourceEntity.setUsername(resultSet.getString("username"));
+            dataSourceEntity.setPassword(OTHER_DB_PASSWORD);
             resultSet.getString("password");
-            dbEntity.setJdbcUrl(resultSet.getString("jdbc_url"));
-            dbEntityList.add(dbEntity);
+            dataSourceEntity.setJdbcUrl(resultSet.getString("jdbc_url"));
+            dataSourceEntityList.add(dataSourceEntity);
         }
-        return dbEntityList;
+        return dataSourceEntityList;
     }
 
     private ResultSet getResultsFromConnectionQuery() throws SQLException {
@@ -46,4 +50,16 @@ public class DataSourceServiceImpl implements DataSourceService {
         return preparedStatement.executeQuery();
     }
 
+    @Override
+    public void addDataSource(DataSourceEntity dataSourceEntity) {
+        System.out.println(dataSourceEntity.getPassword());
+        jdbcTemplate.update("INSERT INTO databases (name, username, password, jdbc_url) VALUES " +
+                "(?, ?, ?, ?)", dataSourceEntity.getName(), dataSourceEntity.getUsername(),
+                                dataSourceEntity.getPassword(), dataSourceEntity.getJdbcUrl());
+    }
+
+    @Override
+    public void removeDataSource(String name) {
+        jdbcTemplate.update("DELETE FROM databases WHERE name=?", name);
+    }
 }

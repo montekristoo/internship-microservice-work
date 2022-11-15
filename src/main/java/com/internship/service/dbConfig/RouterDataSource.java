@@ -2,7 +2,6 @@ package com.internship.service.dbConfig;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
-import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.util.Map;
@@ -20,10 +19,15 @@ public class RouterDataSource extends AbstractRoutingDataSource {
         return contextHolder.get();
     }
 
+    public static void removeContext() {
+        contextHolder.remove();
+    }
+
     @Override
     protected Object determineCurrentLookupKey() {
             String context = getContext();
-            if (context.isEmpty()) return null;
+            System.out.println("Current context:" + contextHolder.get());
+            if (context == null) return null;
             log.info("Current DB {} is working ", context);
             return context;
     }

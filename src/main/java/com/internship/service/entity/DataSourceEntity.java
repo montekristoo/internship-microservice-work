@@ -11,7 +11,7 @@ import java.util.Objects;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DbEntity {
+public class DataSourceEntity {
     private Long id;
     private String name;
     private String username;
@@ -21,8 +21,8 @@ public class DbEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DbEntity dbEntity)) return false;
-        return id.equals(dbEntity.id) && name.equals(dbEntity.name);
+        if (!(o instanceof DataSourceEntity dataSourceEntity)) return false;
+        return id.equals(dataSourceEntity.id) && name.equals(dataSourceEntity.name);
     }
 
     @Override

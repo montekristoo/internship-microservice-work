@@ -1,13 +1,15 @@
-package com.internship.service.service;
+package com.internship.service.service.datasource;
 
-import com.internship.service.entity.DbEntity;
+import com.internship.service.entity.DataSourceEntity;
 import org.springframework.stereotype.Repository;
 
+import javax.xml.crypto.Data;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Set;
 
 @Repository
 public interface DataSourceService {
-    Set<DbEntity> findAll() throws SQLException;
+    Set<DataSourceEntity> findAll() throws SQLException;
+    void addDataSource(DataSourceEntity dataSourceEntity);
+    void removeDataSource(String name);
 }

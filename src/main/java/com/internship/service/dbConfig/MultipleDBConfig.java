@@ -1,11 +1,10 @@
 package com.internship.service.dbConfig;
 
-import com.internship.service.entity.DbEntity;
-import com.internship.service.service.DataSourceService;
+import com.internship.service.annotations.DataSourceAspect;
+import com.internship.service.entity.DataSourceEntity;
+import com.internship.service.service.datasource.DataSourceService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.*;
 
 import javax.sql.DataSource;
@@ -25,15 +24,16 @@ public class MultipleDBConfig {
 
     @Bean
     @Primary
-    public DataSource getDataSource() throws SQLException {
+    public RouterDataSource getDataSource() throws SQLException {
         final Map<Object, Object> dataSources = this.createDataSources();
         final RouterDataSource routerDataSource = new RouterDataSource();
         routerDataSource.setTargetDataSources(dataSources);
-        routerDataSource.setDefaultTargetDataSource(dataSources.get("db_1"));
+        routerDataSource.setDefaultTargetDataSource(dataSources.get("main_db"));
+        routerDataSource.afterPropertiesSet();
         return routerDataSource;
     }
 
-    public Set<DbEntity> getDbsInfo() throws SQLException {
+    public Set<DataSourceEntity> getDbsInfo() throws SQLException {
         return dataSourceService.findAll();
     }
 
@@ -44,13 +44,13 @@ public class MultipleDBConfig {
         return result;
     }
 
-    public DataSource createDataSource(DbEntity dbEntity) {
-        return DataSourceBuilder.create()
-                .username(dbEntity.getUsername())
-                .password(dbEntity.getPassword())
-                .username(dbEntity.getUsername())
-                .url(dbEntity.getJdbcUrl())
-                .build();
+    public DataSource createDataSource(DataSourceEntity dataSourceEntity) {
+        HikariConfig config = new HikariConfig();
+        config.setUsername(dataSourceEntity.getUsername());
+        config.setPassword(dataSourceEntity.getPassword());
+        config.setJdbcUrl(dataSourceEntity.getJdbcUrl());
+        System.out.println(config);
+        return new HikariDataSource(config);
     }
 
 }
