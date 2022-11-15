@@ -1,6 +1,5 @@
 package com.internship.service.dbConfig;
 
-import com.internship.service.annotations.DataSourceAspect;
 import com.internship.service.entity.DataSourceEntity;
 import com.internship.service.service.datasource.DataSourceService;
 import com.zaxxer.hikari.HikariConfig;
@@ -9,10 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Configuration
 public class MultipleDBConfig {
@@ -26,7 +24,7 @@ public class MultipleDBConfig {
 
     @Bean
     @Primary
-    public RouterDataSource getDataSource() throws SQLException {
+    public RouterDataSource getDataSource() {
         final Map<Object, Object> dataSources = this.createDataSources();
         final RouterDataSource routerDataSource = new RouterDataSource();
         routerDataSource.setTargetDataSources(dataSources);
@@ -35,11 +33,11 @@ public class MultipleDBConfig {
         return routerDataSource;
     }
 
-    public Set<DataSourceEntity> getDbsInfo() throws SQLException {
+    public List<DataSourceEntity> getDbsInfo() {
         return dataSourceService.findAll();
     }
 
-    public Map<Object, Object> createDataSources() throws SQLException {
+    public Map<Object, Object> createDataSources() {
         final Map<Object, Object> result = new HashMap<>();
         getDbsInfo().forEach((db) ->
                 result.put(db.getName(), createDataSource(db)));

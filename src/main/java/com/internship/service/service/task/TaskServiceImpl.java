@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@SuppressWarnings("ALL")
 @EnableScheduling
 @Service
 public class TaskServiceImpl implements TaskService {

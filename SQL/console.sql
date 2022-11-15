@@ -26,13 +26,14 @@ VALUES ('db_1', 'postgres', 'internship', 'jdbc:postgresql://localhost:5432/db_1
        ('db_3', 'postgres', 'internship', 'jdbc:postgresql://localhost:5432/db_3');
 
 INSERT INTO databases (name, username, password, jdbc_url)
-VALUES ('db_4', 'postgres', 'internship', 'jdbc:postgresql://localhost:5432/db_4');
+VALUES ('main_db', 'postgres', 'internship', 'jdbc:postgresql://localhost:5432/main_db');
 
 DELETE FROM databases
-    WHERE name = 'db_4';
+    WHERE name = 'main_db';
 
 UPDATE databases
-SET password = crypt(password, gen_salt('bf'));
+SET password = crypt(password, gen_salt('bf'))
+WHERE name = 'main_db';
 
 SELECT name, username, password, jdbc_url FROM databases;
 
@@ -52,3 +53,15 @@ CREATE DATABASE db_4;
 
 SELECT COUNT(*) FROM pg_stat_activity
 WHERE datname = 'db_3';
+
+---------- PROCEDURES
+
+CREATE OR REPLACE PROCEDURE add_datasource(name varchar, username varchar, password varchar, jdbc_url varchar)
+LANGUAGE plpgsql
+AS $$
+    BEGIN
+     INSERT INTO databases (name, username, password, jdbc_url)
+        VALUES (name, username, crypt(password, gen_salt('bf')), jdbc_url);
+    END;
+$$
+
