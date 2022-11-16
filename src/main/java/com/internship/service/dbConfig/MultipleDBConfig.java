@@ -31,6 +31,7 @@ public class MultipleDBConfig {
         routerDataSource.setTargetDataSources(dataSources);
         routerDataSource.setDefaultTargetDataSource(dataSources.get("main_db"));
         routerDataSource.afterPropertiesSet();
+        System.out.println("In bean: " + routerDataSource.getResolvedDefaultDataSource());
         return routerDataSource;
     }
 
@@ -55,7 +56,6 @@ public class MultipleDBConfig {
         config.setUsername(dataSourceEntity.getUsername());
         config.setPassword(dataSourceEntity.getPassword());
         config.setJdbcUrl(dataSourceEntity.getJdbcUrl());
-        System.out.println(config);
         return new HikariDataSource(config);
     }
 

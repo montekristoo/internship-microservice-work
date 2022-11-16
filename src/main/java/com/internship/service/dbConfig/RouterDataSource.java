@@ -25,11 +25,10 @@ public class RouterDataSource extends AbstractRoutingDataSource {
 
     @Override
     protected Object determineCurrentLookupKey() {
-            String context = getContext();
             System.out.println("Current context:" + contextHolder.get());
-            if (context == null) return null;
-            log.info("Current DB {} is working ", context);
-            return context;
+            if (contextHolder.get() == null) return null;
+//            log.info("Current DB {} is working ", context);
+            return contextHolder.get();
     }
 
     @Override
@@ -37,8 +36,4 @@ public class RouterDataSource extends AbstractRoutingDataSource {
         return super.getResolvedDataSources();
     }
 
-
-    private static String getContext() {
-        return contextHolder.get();
-    }
 }
