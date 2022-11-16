@@ -1,9 +1,11 @@
 package com.internship.service.service.datasource;
 
 import com.internship.service.entity.DataSourceEntity;
+import com.internship.service.entity.TaskEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +17,7 @@ import java.util.*;
 @RefreshScope
 public class DataSourceServiceImpl implements DataSourceService {
     private final JdbcTemplate jdbcTemplate;
-    private static final String DB_URL = "jdbc:postgresql://localhost:5432/main_db";
+    private static final String DB_URL = "jdbc:postgresql://localhost:3002/main_db";
     private static final String USERNAME = "postgres";
     private static final String SQL_GET_DATA = "SELECT * FROM databases;";
     private static final String MAIN_PASSWORD = "internship";
@@ -27,7 +29,6 @@ public class DataSourceServiceImpl implements DataSourceService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
     @Override
     public List<DataSourceEntity> findAll() {
         List<DataSourceEntity> dataSourceEntityList = new ArrayList<>();
@@ -36,13 +37,12 @@ public class DataSourceServiceImpl implements DataSourceService {
             resultSet = getResultsFromConnectionQuery();
             if (resultSet != null) {
                 while (resultSet.next()) {
-                    DataSourceEntity dataSourceEntity = new DataSourceEntity();
-                    dataSourceEntity.setName(resultSet.getString("name"));
-                    System.out.println(dataSourceEntity.getName());
-                    dataSourceEntity.setUsername(resultSet.getString("username"));
-                    dataSourceEntity.setPassword(OTHER_DB_PASSWORD);
-                    resultSet.getString("password");
-                    dataSourceEntity.setJdbcUrl(resultSet.getString("jdbc_url"));
+                    DataSourceEntity dataSourceEntity = DataSourceEntity.builder()
+                            .name(resultSet.getString("name"))
+                            .username(resultSet.getString("username"))
+                            .password(MAIN_PASSWORD)
+                            .jdbcUrl(resultSet.getString("jdbc_url"))
+                            .build();
                     dataSourceEntityList.add(dataSourceEntity);
                 }
                 resultSet.close();
@@ -76,5 +76,10 @@ public class DataSourceServiceImpl implements DataSourceService {
     @Override
     public void removeDataSource(String name) {
         jdbcTemplate.update("DELETE FROM databases WHERE name=?", name);
+    }
+
+    @Override
+    public String getCurrentDb() {
+        return jdbcTemplate.queryForObject("SELECT current_database()", String.class);
     }
 }

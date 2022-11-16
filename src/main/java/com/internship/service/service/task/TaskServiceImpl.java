@@ -16,14 +16,12 @@ import java.util.List;
 @EnableScheduling
 @Service
 public class TaskServiceImpl implements TaskService {
-    private final JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
     private static final String SQL = "INSERT INTO test_table(description) VALUES ('test_description')";
     private final int TIMER = 2000;
 
-    @Autowired
-    public TaskServiceImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    public TaskServiceImpl() {}
 
     @ChangeDatabase(value = "db_1")
     @Scheduled(fixedDelay = TIMER)
@@ -60,10 +58,5 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void truncateTable() {
         jdbcTemplate.execute("TRUNCATE TABLE test_table;");
-    }
-
-    @Override
-    public String getCurrentDb() {
-        return jdbcTemplate.queryForObject("SELECT current_database()", String.class);
     }
 }
