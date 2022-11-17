@@ -1,4 +1,4 @@
-package com.internship.service.dbConfig;
+package com.internship.service.config;
 
 import com.internship.service.entity.DataSourceEntity;
 import com.internship.service.service.datasource.DataSourceService;
@@ -28,21 +28,16 @@ public class MultipleDBConfig {
     public RouterDataSource getDataSource() {
         final Map<Object, Object> dataSources = this.createDataSources();
         final RouterDataSource routerDataSource = new RouterDataSource();
-        routerDataSource.setTargetDataSources(dataSources);
         routerDataSource.setDefaultTargetDataSource(dataSources.get("main_db"));
         routerDataSource.afterPropertiesSet();
         System.out.println("In bean: " + routerDataSource.getResolvedDefaultDataSource());
         return routerDataSource;
     }
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-
     public List<DataSourceEntity> getDbsInfo() {
         return dataSourceService.findAll();
     }
+
 
     public Map<Object, Object> createDataSources() {
         final Map<Object, Object> result = new HashMap<>();
@@ -51,12 +46,18 @@ public class MultipleDBConfig {
         return result;
     }
 
+
     public DataSource createDataSource(DataSourceEntity dataSourceEntity) {
         HikariConfig config = new HikariConfig();
         config.setUsername(dataSourceEntity.getUsername());
         config.setPassword(dataSourceEntity.getPassword());
         config.setJdbcUrl(dataSourceEntity.getJdbcUrl());
         return new HikariDataSource(config);
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
 }

@@ -1,6 +1,6 @@
 package com.internship.service.service.restart;
 
-import com.internship.service.dbConfig.RouterDataSource;
+import com.internship.service.config.RouterDataSource;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.restart.RestartEndpoint;

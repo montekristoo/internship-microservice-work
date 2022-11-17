@@ -1,7 +1,7 @@
 package com.internship.service.service.task;
 
 import com.internship.service.annotations.ChangeDatabase;
-import com.internship.service.dbConfig.RouterDataSource;
+import com.internship.service.config.RouterDataSource;
 import com.internship.service.entity.TaskEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -23,32 +23,32 @@ public class TaskServiceImpl implements TaskService {
 
     public TaskServiceImpl() {}
 
-    @ChangeDatabase(value = "db_1")
-    @Scheduled(fixedDelay = TIMER)
+//    @ChangeDatabase(value = "db_1")
+//    @Scheduled(fixedDelay = 10000)
     public void insertIntoDb1() {
         jdbcTemplate.execute(SQL);
     }
 
-    @ChangeDatabase(value = "db_2")
-    @Scheduled(fixedDelay = TIMER)
+//    @ChangeDatabase(value = "db_2")
+//    @Scheduled(fixedDelay = 20000)
     public void insertIntoDb2() {
         jdbcTemplate.execute(SQL);
     }
 
-    @ChangeDatabase(value = "db_3")
-    @Scheduled(fixedDelay = TIMER)
-    public void insertIntoDb3() {
-        jdbcTemplate.execute(SQL);
-    }
-
-    @ChangeDatabase(value = "db_4")
-    @Scheduled(fixedDelay = TIMER)
-    public void insertIntoDb4() {
-        if (!RouterDataSource.getCurrentSource().equals("db_4")) {
-            return;
-        }
-        jdbcTemplate.execute(SQL);
-    }
+//    @ChangeDatabase(value = "db_3")
+//    @Scheduled(fixedDelay = TIMER)
+//    public void insertIntoDb3() {
+//        jdbcTemplate.execute(SQL);
+//    }
+//
+//    @ChangeDatabase(value = "db_4")
+//    @Scheduled(fixedDelay = TIMER)
+//    public void insertIntoDb4() {
+//        if (!RouterDataSource.getCurrentSource().equals("db_4")) {
+//            return;
+//        }
+//        jdbcTemplate.execute(SQL);
+//    }
 
     @Override
     public List<TaskEntity> getAll() {

@@ -2,7 +2,7 @@ package com.internship.service.service.datasource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.internship.service.ServiceApplication;
-import com.internship.service.dbConfig.RouterDataSource;
+import com.internship.service.config.RouterDataSource;
 import com.internship.service.entity.DataSourceEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ class DataSourceServiceImplTest {
     private ObjectMapper mapper;
 
     private MockRestServiceServer mockServer;
-    final String baseUrl = "http://localhost:8080/databases";
+    private final String baseUrl = "http://localhost:8080/databases";
 
     @BeforeEach
     public void init() {

@@ -1,6 +1,6 @@
 package com.internship.service.annotations;
 
-import com.internship.service.dbConfig.RouterDataSource;
+import com.internship.service.config.RouterDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -9,14 +9,12 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
 
 @Aspect
-@Order(-10)
 @Slf4j
 @Component
 public class DataSourceAspect {

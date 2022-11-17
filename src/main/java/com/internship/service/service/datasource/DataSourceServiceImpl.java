@@ -1,27 +1,22 @@
 package com.internship.service.service.datasource;
 
 import com.internship.service.entity.DataSourceEntity;
-import com.internship.service.entity.TaskEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.lang.instrument.UnmodifiableClassException;
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.*;
 
 @Service
-@RefreshScope
 public class DataSourceServiceImpl implements DataSourceService {
     private final JdbcTemplate jdbcTemplate;
     private static final String DB_URL = "jdbc:postgresql://localhost:3002/main_db";
     private static final String USERNAME = "postgres";
     private static final String SQL_GET_DATA = "SELECT * FROM databases;";
     private static final String MAIN_PASSWORD = "internship";
-    private static final String OTHER_DB_PASSWORD = "internship";
 
     @Autowired
     @Lazy
@@ -81,5 +76,8 @@ public class DataSourceServiceImpl implements DataSourceService {
     @Override
     public String getCurrentDb() {
         return jdbcTemplate.queryForObject("SELECT current_database()", String.class);
+    }
+
+    public void testData() {
     }
 }
