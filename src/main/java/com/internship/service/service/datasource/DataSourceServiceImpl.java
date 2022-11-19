@@ -30,17 +30,6 @@ public class DataSourceServiceImpl implements DataSourceService {
     }
 
     @Override
-    @ChangeDatabase("main_db")
-    public List<DataSourceEntity> findAll() {
-        return jdbcTemplate.query("SELECT * FROM databases", (rs, row_number) -> (
-                new DataSourceEntity(rs.getString("name"),
-                        rs.getString("username"),
-                        rs.getString("internship"),
-                        rs.getString("jdbc_url"))
-        ));
-    }
-
-    @Override
     public void removeDataSource(String name) {
         jdbcTemplate.update("DELETE FROM databases WHERE name=?", name);
     }

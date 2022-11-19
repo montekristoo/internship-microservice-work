@@ -45,15 +45,6 @@ public class TaskServiceImpl implements TaskService {
         jdbcTemplate.execute(SQL);
     }
 
-//    @ChangeDatabase(value = "main_db")
-//    @Scheduled(fixedDelay = 2000)
-//    public void testMaindb() {
-//        List<DataSourceEntity> list = jdbcTemplate.query("SELECT * FROM databases", (rs, row_nmb) -> (
-//                   new DataSourceEntity(rs.getString("name"), rs.getString("username"),
-//                           rs.getString("password"), rs.getString("jdbc_url"))
-//                ));
-//        System.out.println("Lists: " + list);
-//    }
 //
 //    @ChangeDatabase(value = "db_4")
 //    @Scheduled(fixedDelay = TIMER)

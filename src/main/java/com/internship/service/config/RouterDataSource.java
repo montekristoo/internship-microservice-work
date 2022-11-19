@@ -48,6 +48,7 @@ public class RouterDataSource extends AbstractRoutingDataSource {
         jdbcTemplate.getDataSource()
                 .unwrap(HikariDataSource.class)
                 .close();
+        contextHolder.remove();
     }
 
     @Override

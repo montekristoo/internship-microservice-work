@@ -10,17 +10,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/")
 public class DataSourceController {
-    private final DataSourceService dataSourceService;
-    private final RestartServiceImpl restartServiceImpl;
-
     @Autowired
-    public DataSourceController(DataSourceService dataSourceService, RestartServiceImpl restartServiceImpl) {
-        this.dataSourceService = dataSourceService;
-        this.restartServiceImpl = restartServiceImpl;
-    }
+    private DataSourceService dataSourceService;
 
-    @ChangeDatabase(value = "main_db")
+
     @PostMapping("databases")
+    @ChangeDatabase(value = "main_db")
     public void addDataSource(@RequestBody DataSourceEntity dataSourceEntity) {
         System.out.println(dataSourceEntity.getName());
         dataSourceService.addDataSource(dataSourceEntity);

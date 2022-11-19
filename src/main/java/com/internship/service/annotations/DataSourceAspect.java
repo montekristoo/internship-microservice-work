@@ -28,7 +28,7 @@ public class DataSourceAspect {
     }
 
     @Before("annotationPointCut()")
-    public void before(JoinPoint joinPoint) throws SQLException {
+    public void before(JoinPoint joinPoint) {
         MethodSignature sign = (MethodSignature) joinPoint.getSignature();
         Method method = sign.getMethod();
         ChangeDatabase annotation = method.getAnnotation(ChangeDatabase.class);
