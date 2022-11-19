@@ -24,13 +24,11 @@ public class DataSourceController {
     public void addDataSource(@RequestBody DataSourceEntity dataSourceEntity) {
         System.out.println(dataSourceEntity.getName());
         dataSourceService.addDataSource(dataSourceEntity);
-        restartServiceImpl.restartApp();
     }
 
     @DeleteMapping("databases/{name}")
     @ChangeDatabase(value = "main_db")
     public void deleteDataSource(@PathVariable("name") String name) {
         dataSourceService.removeDataSource(name);
-        restartServiceImpl.restartApp();
     }
 }

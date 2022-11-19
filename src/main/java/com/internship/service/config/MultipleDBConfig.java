@@ -6,25 +6,27 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.*;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
+import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Configuration
-@Lazy
 public class MultipleDBConfig {
 
-    private final DataSourceService dataSourceService;
-
     @Autowired
-    public MultipleDBConfig(DataSourceService dataSourceService) {
-        this.dataSourceService = dataSourceService;
-    }
+    @Lazy
+    private JdbcTemplate jdbcTemplate;
+
 
     @Bean
     @Primary
@@ -33,6 +35,7 @@ public class MultipleDBConfig {
         final RouterDataSource routerDataSource = new RouterDataSource();
         routerDataSource.setTargetDataSources(dataSources);
         routerDataSource.setDefaultTargetDataSource(dataSources.get("main_db"));
+        routerDataSource.setLenientFallback(true);
         routerDataSource.afterPropertiesSet();
         System.out.println("In bean: " + routerDataSource.getResolvedDefaultDataSource());
         return routerDataSource;
@@ -40,23 +43,29 @@ public class MultipleDBConfig {
 
     @Bean
     @Scope("prototype")
-    public List<DataSourceEntity> getDbsInfo() {
-        return
+    @Lazy
+    public List<DataSourceEntity> getDbsInfo() throws SQLException {
+        jdbcTemplate.setDataSource(createDefaultDataSource());
+        List<DataSourceEntity> entityList = jdbcTemplate.query("SELECT * FROM databases", (rs, row_number) ->
+            new DataSourceEntity(
+                    rs.getString("name"),
+                    rs.getString("username"),
+                    rs.getString("password"),
+                    rs.getString("jdbc_url")
+            )
+        );
+        jdbcTemplate.getDataSource().unwrap(HikariDataSource.class).close();
+        return entityList;
     }
 
 
     public Map<Object, Object> createDataSources() {
         final Map<Object, Object> result = new HashMap<>();
-        getDbsInfo().forEach((db) -> {
-            if (db.getName().equals("main_db")) {
-            result.put(db.getName(), createDataSource(db));
-            }
-        });
+        result.put("main_db", createDefaultDataSource());
         return result;
     }
 
-
-    public DataSource createDataSource(DataSourceEntity dataSourceEntity) {
+    public DataSource createDefaultDataSource() {
         HikariConfig config = new HikariConfig();
         config.setUsername("postgres");
         config.setPassword("internship");

@@ -28,8 +28,11 @@ VALUES ('db_1', 'postgres', 'internship', 'jdbc:postgresql://localhost:5432/db_1
 INSERT INTO databases (name, username, password, jdbc_url)
 VALUES ('main_db', 'postgres', 'internship', 'jdbc:postgresql://localhost:5432/main_db');
 
+INSERT INTO databases (name, username, password, jdbc_url)
+VALUES ('db_4', 'postgres', 'internship', 'jdbc:postgresql://localhost:3002/db_4');
+
 DELETE FROM databases
-    WHERE name = 'main_db';
+    WHERE name = 'db_4';
 
 UPDATE databases
 SET password = crypt(password, gen_salt('bf'))

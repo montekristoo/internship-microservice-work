@@ -1,7 +1,6 @@
 package com.internship.service.service.task;
 
 import com.internship.service.annotations.ChangeDatabase;
-import com.internship.service.config.RouterDataSource;
 import com.internship.service.entity.DataSourceEntity;
 import com.internship.service.entity.TaskEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @SuppressWarnings("ALL")
@@ -24,40 +22,37 @@ public class TaskServiceImpl implements TaskService {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private AbstractRoutingDataSource abstractRoutingDataSource;
-    @Autowired
-    @Lazy
-    private List<DataSourceEntity> getDbsInfo;
     private static final String SQL = "INSERT INTO test_table(description) VALUES ('test_description')";
     private final int TIMER = 2000;
 
     public TaskServiceImpl() {}
 
-//    @ChangeDatabase(value = "db_1")
-    @Scheduled(fixedDelay = 7000)
-    public void insertIntoDb1() throws InterruptedException, SQLException {
-        Thread.sleep(2000); {
-            ((RouterDataSource) abstractRoutingDataSource).setDataSource1();
-            jdbcTemplate.execute(SQL);
-            ((RouterDataSource) abstractRoutingDataSource).removeContext1();
-        };
-        System.out.println();
-        Thread.sleep(2000); {
-            ((RouterDataSource) abstractRoutingDataSource).setDataSource2();
-            jdbcTemplate.execute(SQL);
-            ((RouterDataSource) abstractRoutingDataSource).removeContext2();
-        };
+    @ChangeDatabase(value = "db_1")
+    @Scheduled(fixedDelay = 3000)
+    public void insertIntoDb1() {
+        jdbcTemplate.execute(SQL);
     }
 
-//    @ChangeDatabase(value = "db_2")
-//    @Scheduled(fixedDelay = 20000)
-//    public void insertIntoDb2() {
-//        jdbcTemplate.execute(SQL);
-//    }
+    @ChangeDatabase(value = "db_2")
+    @Scheduled(fixedDelay = 6000)
+    public void insertIntoDb2() {
+        jdbcTemplate.execute(SQL);
+    }
 
-//    @ChangeDatabase(value = "db_3")
-//    @Scheduled(fixedDelay = TIMER)
-//    public void insertIntoDb3() {
-//        jdbcTemplate.execute(SQL);
+    @ChangeDatabase(value = "db_3")
+    @Scheduled(fixedDelay = 10000)
+    public void insertIntoDb3() {
+        jdbcTemplate.execute(SQL);
+    }
+
+//    @ChangeDatabase(value = "main_db")
+//    @Scheduled(fixedDelay = 2000)
+//    public void testMaindb() {
+//        List<DataSourceEntity> list = jdbcTemplate.query("SELECT * FROM databases", (rs, row_nmb) -> (
+//                   new DataSourceEntity(rs.getString("name"), rs.getString("username"),
+//                           rs.getString("password"), rs.getString("jdbc_url"))
+//                ));
+//        System.out.println("Lists: " + list);
 //    }
 //
 //    @ChangeDatabase(value = "db_4")
