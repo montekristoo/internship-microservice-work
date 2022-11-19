@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Repository
 public interface DataSourceService {
-    List<DataSourceEntity> findAll();
+//    List<DataSourceEntity> findAll();
     void addDataSource(DataSourceEntity dataSourceEntity);
     void removeDataSource(String name);
     String getCurrentDb();

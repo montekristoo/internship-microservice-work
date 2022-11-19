@@ -42,11 +42,11 @@ public class DataSourceAspect {
         }
     }
 
-    @After("annotationPointCut()")
-    public void after(JoinPoint joinPoint) {
-        if (RouterDataSource.getCurrentSource() != null) {
-            RouterDataSource.removeContext();
-        }
-    }
+//    @After("annotationPointCut()")
+//    public void after(JoinPoint joinPoint) {
+//        if (RouterDataSource.getCurrentSource() != null) {
+//            RouterDataSource.removeContext();
+//        }
+//    }
 
 }

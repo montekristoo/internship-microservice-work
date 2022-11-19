@@ -24,42 +24,42 @@ public class DataSourceServiceImpl implements DataSourceService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
-    public List<DataSourceEntity> findAll() {
-        List<DataSourceEntity> dataSourceEntityList = new ArrayList<>();
-        ResultSet resultSet = null;
-        try {
-            resultSet = getResultsFromConnectionQuery();
-            if (resultSet != null) {
-                while (resultSet.next()) {
-                    DataSourceEntity dataSourceEntity = DataSourceEntity.builder()
-                            .name(resultSet.getString("name"))
-                            .username(resultSet.getString("username"))
-                            .password(MAIN_PASSWORD)
-                            .jdbcUrl(resultSet.getString("jdbc_url"))
-                            .build();
-                    dataSourceEntityList.add(dataSourceEntity);
-                }
-                resultSet.close();
-            }
-            return dataSourceEntityList;
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private ResultSet getResultsFromConnectionQuery() {
-        try(Connection connection = DriverManager.getConnection(DB_URL, USERNAME, MAIN_PASSWORD)) {
-            PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_DATA);
-            return preparedStatement.executeQuery();
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+//    @Override
+//    public List<DataSourceEntity> findAll() {
+//        List<DataSourceEntity> dataSourceEntityList = new ArrayList<>();
+//        ResultSet resultSet = null;
+//        try {
+//            resultSet = getResultsFromConnectionQuery();
+//            if (resultSet != null) {
+//                while (resultSet.next()) {
+//                    DataSourceEntity dataSourceEntity = DataSourceEntity.builder()
+//                            .name(resultSet.getString("name"))
+//                            .username(resultSet.getString("username"))
+//                            .password(MAIN_PASSWORD)
+//                            .jdbcUrl(resultSet.getString("jdbc_url"))
+//                            .build();
+//                    dataSourceEntityList.add(dataSourceEntity);
+//                }
+//                resultSet.close();
+//            }
+//            return dataSourceEntityList;
+//        }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+//
+//    private ResultSet getResultsFromConnectionQuery() {
+//        try(Connection connection = DriverManager.getConnection(DB_URL, USERNAME, MAIN_PASSWORD)) {
+//            PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_DATA);
+//            return preparedStatement.executeQuery();
+//        }
+//        catch(Exception e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
     @Override
     public void addDataSource(DataSourceEntity dataSourceEntity) {
