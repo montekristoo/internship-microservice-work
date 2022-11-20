@@ -1,6 +1,6 @@
 package com.internship.service.annotations;
 
-import com.internship.service.config.RouterDataSource;
+import com.internship.service.config.RoutingDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
 
@@ -28,16 +27,16 @@ public class DataSourceAspect {
     }
 
     @Before("annotationPointCut()")
-    public void before(JoinPoint joinPoint) {
+    public void before(JoinPoint joinPoint) throws SQLException {
         MethodSignature sign = (MethodSignature) joinPoint.getSignature();
         Method method = sign.getMethod();
         ChangeDatabase annotation = method.getAnnotation(ChangeDatabase.class);
-        ((RouterDataSource) routingDataSource).setContext(annotation.value());
+        ((RoutingDataSource) routingDataSource).setContext(annotation.value());
     }
 
     @After("annotationPointCut()")
     public void after(JoinPoint joinPoint) throws SQLException {
-        ((RouterDataSource) routingDataSource).removeContext();
+        ((RoutingDataSource) routingDataSource).removeContext();
     }
 
 }

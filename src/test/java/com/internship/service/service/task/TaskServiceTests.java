@@ -1,7 +1,6 @@
 package com.internship.service.service.task;
 
-import com.internship.service.annotations.ChangeDatabase;
-import com.internship.service.config.RouterDataSource;
+import com.internship.service.config.RoutingDataSource;
 import com.internship.service.entity.TaskEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,11 +18,11 @@ class TaskServiceTests {
 
     @BeforeEach
     void clearTables() {
-        RouterDataSource.setContext("db_1");
+        RoutingDataSource.setContext("db_1");
         taskService.truncateTable();
-        RouterDataSource.setContext("db_2");
+        RoutingDataSource.setContext("db_2");
         taskService.truncateTable();
-        RouterDataSource.setContext("db_3");
+        RoutingDataSource.setContext("db_3");
         taskService.truncateTable();
     }
 
@@ -36,7 +35,7 @@ class TaskServiceTests {
 
     @Test
     public void givenCurrentDb2ToConnect_thenInsertNewDataInTable_thenCheckIfDataAreInsertedInCorrectDb() {
-        RouterDataSource.setContext("db_2");
+        RoutingDataSource.setContext("db_2");
         taskService.insertIntoDb2();
         List<TaskEntity> tasksFromDb2 = taskService.getAll();
         assertEquals(tasksFromDb2.size(), 1);
@@ -44,7 +43,7 @@ class TaskServiceTests {
 
     @Test
     public void givenCurrentDb3ToConnect_thenInsertNewDataInTable_thenCheckIfDataAreInsertedInCorrectDb() {
-        RouterDataSource.setContext("db_3");
+        RoutingDataSource.setContext("db_3");
         taskService.insertIntoDb3();
         List<TaskEntity> tasksFromDb3 = taskService.getAll();
         assertEquals(tasksFromDb3.size(), 1);

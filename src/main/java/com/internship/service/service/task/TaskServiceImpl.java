@@ -40,7 +40,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @ChangeDatabase(value = "db_3")
-    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 7000)
     public void insertIntoDb3() {
         jdbcTemplate.execute(SQL);
     }

@@ -43,7 +43,7 @@ FROM databases;
 SELECT * FROM pg_stat_activity;
 
 DELETE FROM databases
-WHERE name = 'db_4';
+WHERE name = 'main_db';
 
 SELECT * FROM databases;
 
@@ -63,5 +63,7 @@ BEGIN
     INSERT INTO databases (name, username, password, jdbc_url)
     VALUES (name, username, crypt(password, gen_salt('bf')), jdbc_url);
 END;
-$$
+$$;
+
+call add_datasource('main_db', 'postgres', 'internship', 'jdbc:postgresql://localhost:5432/main_db');
 

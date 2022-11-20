@@ -1,8 +1,8 @@
-package com.internship.service.service.datasource;
+package com.internship.service.service.rootdb;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.internship.service.ServiceApplication;
-import com.internship.service.config.RouterDataSource;
+import com.internship.service.config.RoutingDataSource;
 import com.internship.service.entity.DataSourceEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,10 +24,10 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 @SpringBootTest(classes = ServiceApplication.class)
 @ExtendWith(SpringExtension.class)
-class DataSourceServiceImplTest {
+class RootDatabaseServiceImplTest {
 
     @Autowired
-    private DataSourceService dsSource;
+    private RootDatabaseService dsSource;
     @Autowired
     private RestTemplate restTemplate;
     @Autowired
@@ -68,7 +68,7 @@ class DataSourceServiceImplTest {
     @Test
     public void givenCurrentDb1_CheckCurrentDb() {
         String db = "db_1";
-        RouterDataSource.setContext(db);
+        RoutingDataSource.setContext(db);
         String result = dsSource.getCurrentDb();
         assertEquals(result, db);
     }
@@ -76,7 +76,7 @@ class DataSourceServiceImplTest {
     @Test
     public void givenCurrentDb2_CheckCurrentDb() {
         String db = "db_2";
-        RouterDataSource.setContext(db);
+        RoutingDataSource.setContext(db);
         String result = dsSource.getCurrentDb();
         assertEquals(result, db);
     }
@@ -84,7 +84,7 @@ class DataSourceServiceImplTest {
     @Test
     public void givenCurrentDb3_CheckCurrentDb() {
         String db = "db_3";
-        RouterDataSource.setContext(db);
+        RoutingDataSource.setContext(db);
         String result = dsSource.getCurrentDb();
         assertEquals(result, db);
     }
