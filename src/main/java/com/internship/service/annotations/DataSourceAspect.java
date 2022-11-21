@@ -22,7 +22,7 @@ public class DataSourceAspect {
     @Autowired
     private AbstractRoutingDataSource routingDataSource;
 
-    @Pointcut("@annotation(com.internship.service.annotations.ChangeDatabase)")
+    @Pointcut("@annotation(com.internship.service.annotations.SetDatabase)")
     public void annotationPointCut() {
     }
 
@@ -30,7 +30,7 @@ public class DataSourceAspect {
     public void before(JoinPoint joinPoint) throws SQLException {
         MethodSignature sign = (MethodSignature) joinPoint.getSignature();
         Method method = sign.getMethod();
-        ChangeDatabase annotation = method.getAnnotation(ChangeDatabase.class);
+        SetDatabase annotation = method.getAnnotation(SetDatabase.class);
         ((RoutingDataSource) routingDataSource).setContext(annotation.value());
     }
 

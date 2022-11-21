@@ -4,22 +4,25 @@ import lombok.*;
 
 import java.util.Objects;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@Getter
+@Setter
+@NoArgsConstructor
 public class DataSourceEntity {
     private Long id;
     private String name;
     private String username;
     private String password;
     private String jdbcUrl;
+    private String driverClassName;
 
-    public DataSourceEntity(String name, String username, String password, String jdbcUrl) {
+    public DataSourceEntity(Long id, String name, String username, String password, String jdbcUrl, String driverClassName) {
+        this.id = id;
         this.name = name;
         this.username = username;
         this.password = password;
         this.jdbcUrl = jdbcUrl;
+        this.driverClassName = driverClassName;
     }
 
     @Override

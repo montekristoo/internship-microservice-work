@@ -12,6 +12,8 @@ public class DataSourceMapper {
         config.setUsername(dataSrcEntity.getUsername());
         config.setPassword("internship");
         config.setJdbcUrl(dataSrcEntity.getJdbcUrl());
+        config.setDriverClassName(dataSrcEntity.getDriverClassName());
+        config.setPoolName("Pool - " + dataSrcEntity.getName());
         return new HikariDataSource(config);
     }
 }
