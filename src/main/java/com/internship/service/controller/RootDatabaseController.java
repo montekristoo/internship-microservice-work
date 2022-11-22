@@ -5,6 +5,8 @@ import com.internship.service.service.rootdb.RootDatabaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/")
 public class RootDatabaseController {
@@ -21,5 +23,20 @@ public class RootDatabaseController {
     @DeleteMapping("databases/{name}")
     public void deleteDataSource(@PathVariable("name") String name) {
         rootDataBaseService.removeDataSource(name);
+    }
+
+    @GetMapping("databases")
+    public List<DataSourceEntity> findAllDatabases() {
+        return rootDataBaseService.findAll();
+    }
+
+    @GetMapping("cached")
+    public DataSourceEntity getCachedValue() {
+        return rootDataBaseService.getCachedDb();
+    }
+
+    @GetMapping("databases/{username}")
+    public List<DataSourceEntity> findByUsername(@PathVariable("username") String username) {
+        return rootDataBaseService.findByUser(username);
     }
 }

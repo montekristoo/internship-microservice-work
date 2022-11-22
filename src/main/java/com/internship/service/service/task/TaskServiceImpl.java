@@ -1,13 +1,12 @@
 package com.internship.service.service.task;
 
-import com.internship.service.config.DatabasePullerManager;
 import com.internship.service.config.RoutingDataSource;
 import com.internship.service.entity.DataSourceEntity;
+import com.internship.service.service.rootdb.RootDatabaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -22,9 +21,9 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private AbstractRoutingDataSource abstractRoutingDataSource;
+    private RoutingDataSource routingDataSource;
     @Autowired
-    private DatabasePullerManager databasePullerManager;
+    private RootDatabaseService rootDatabaseService;
     @Autowired
     private ApplicationContext applicationContext;
     private static final String SQL = "INSERT INTO test_table(description) VALUES ('test_description')";
@@ -36,39 +35,23 @@ public class TaskServiceImpl implements TaskService {
 
     // TODO:
     //- Parcurgerea bazelor de date in metoda connection cu anotatia creata ✔
-    //- Redenumirea anotatiei ChangeDatabase in setDatabase ✔
+    //- Redenumirea anotatiei ChangeDatabase in SetDatabase ✔
     //- Crearea unui 'trigger' care va functiona la adaugarea/eliminarea unei baze de date, si care va avea ca scop sa
     //  recreeze bean-ul (aka redefinition bean on right moment)
     //- Refactorul codului - ✔
     //- Adaugarea driverului - ✔
-    //-
+    //- Eliminarea circuitelor - ✔
 
-    @Scheduled(fixedDelay = 3000)
-    public void routing() {
-        for (DataSourceEntity database : databasePullerManager.dataSourceEntities()) {
+//    @Scheduled(fixedDelay = 3000)
+    public void routing() throws SQLException {
+        for (DataSourceEntity database : rootDatabaseService.findAll()) {
             connect(database.getName());
         }
-        log.info(applicationContext.getBean(DatabasePullerManager.class).toString());
     }
 
-    public void connect(String name) {
-        ((RoutingDataSource) abstractRoutingDataSource).setContext(name);
+    public void connect(String name) throws SQLException {
+        routingDataSource.setContext(name);
         jdbcTemplate.execute(SQL);
-        try {
-            ((RoutingDataSource) abstractRoutingDataSource).removeContext();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        routingDataSource.removeContext();
     }
-
-
-//    @Override
-//    public List<TaskEntity> getAll() {
-//        return jdbcTemplate.query("SELECT * FROM test_table;", new BeanPropertyRowMapper<>(TaskEntity.class));
-//    }
-//
-//    @Override
-//    public void truncateTable() {
-//        jdbcTemplate.execute("TRUNCATE TABLE test_table;");
-//    }
 }

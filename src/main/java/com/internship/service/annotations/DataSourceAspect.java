@@ -20,23 +20,23 @@ import java.sql.SQLException;
 @Component
 public class DataSourceAspect {
     @Autowired
-    private AbstractRoutingDataSource routingDataSource;
+    private RoutingDataSource routingDataSource;
 
     @Pointcut("@annotation(com.internship.service.annotations.SetDatabase)")
     public void annotationPointCut() {
     }
 
     @Before("annotationPointCut()")
-    public void before(JoinPoint joinPoint) throws SQLException {
+    public void before(JoinPoint joinPoint) {
         MethodSignature sign = (MethodSignature) joinPoint.getSignature();
         Method method = sign.getMethod();
         SetDatabase annotation = method.getAnnotation(SetDatabase.class);
-        ((RoutingDataSource) routingDataSource).setContext(annotation.value());
+         routingDataSource.setContext(annotation.value());
     }
 
     @After("annotationPointCut()")
     public void after(JoinPoint joinPoint) throws SQLException {
-        ((RoutingDataSource) routingDataSource).removeContext();
+        routingDataSource.removeContext();
     }
 
 }

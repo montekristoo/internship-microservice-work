@@ -1,0 +1,8 @@
+hazelcast:
+  jet:
+    enabled: true
+  network:
+    join:
+      multicast:
+        enabled: true
+

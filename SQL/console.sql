@@ -68,9 +68,7 @@ CREATE OR REPLACE PROCEDURE add_datasource(name varchar, username varchar, passw
 AS $$
 BEGIN
     INSERT INTO databases (name, username, password, jdbc_url, driver_class_name)
-    VALUES (name, username, crypt(password, gen_salt('bf')), jdbc_url, driver_class_name);
+    VALUES (name, username, password, jdbc_url, driver_class_name);
 END;
 $$;
-
-call add_datasource('db_4', 'postgres', 'internship', 'jdbc:postgresql://localhost:5432/db_4');
 
