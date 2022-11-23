@@ -2,13 +2,14 @@ package com.internship.service.entity;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Builder
 @Getter
 @Setter
 @NoArgsConstructor
-public class DataSourceEntity {
+public class DataSourceEntity implements Serializable {
     private Long id;
     private String name;
     private String username;

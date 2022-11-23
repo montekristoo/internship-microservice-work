@@ -11,6 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
+@EnableCaching
 public class ServiceApplication {
 
     public static ConfigurableApplicationContext context;

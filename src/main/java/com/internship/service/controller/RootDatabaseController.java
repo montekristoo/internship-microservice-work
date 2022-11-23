@@ -31,12 +31,12 @@ public class RootDatabaseController {
     }
 
     @GetMapping("cached")
-    public DataSourceEntity getCachedValue() {
+    public List<DataSourceEntity> getCachedValue() {
         return rootDataBaseService.getCachedDb();
     }
 
     @GetMapping("databases/{username}")
-    public List<DataSourceEntity> findByUsername(@PathVariable("username") String username) {
-        return rootDataBaseService.findByUser(username);
+    public DataSourceEntity findByName(@PathVariable("username") String name) {
+        return rootDataBaseService.findByName(name);
     }
 }

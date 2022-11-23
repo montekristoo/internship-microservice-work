@@ -8,6 +8,6 @@ public interface RootDatabaseService {
     void addDataSource(DataSourceEntity dataSourceEntity);
     void removeDataSource(String name);
     List<DataSourceEntity> findAll();
-    DataSourceEntity getCachedDb();
-    List<DataSourceEntity> findByUser(String name);
+    List<DataSourceEntity> getCachedDb();
+    DataSourceEntity findByName(String name);
 }
