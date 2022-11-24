@@ -1,6 +1,7 @@
 package com.internship.service.config;
 
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -9,6 +10,7 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 
 @Component
+@Slf4j
 public class JdbcTemplateManager {
 
     @Autowired
@@ -19,11 +21,9 @@ public class JdbcTemplateManager {
     }
 
     public void removeCurrentDataSource() throws SQLException {
+        log.info("Removing...");
         jdbcTemplate.getDataSource().unwrap(HikariDataSource.class).close();
-    }
-
-    public DataSource getCurrentDataSource() {
-        return jdbcTemplate.getDataSource();
+        log.info("Current data: " + jdbcTemplate.getDataSource());
     }
 
 }

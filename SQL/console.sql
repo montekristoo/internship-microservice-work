@@ -45,21 +45,22 @@ SELECT name, username, password, jdbc_url FROM databases;
 SELECT *
 FROM databases;
 
-SELECT * FROM pg_stat_activity;
+SELECT COUNT(*) FROM pg_stat_activity;
 
 DELETE FROM databases
 WHERE name = 'db_2';
 
 SELECT * FROM databases;
 
-SELECT COUNT(*)
+SELECT *
 FROM pg_stat_activity;
 
 
 CREATE DATABASE db_4;
 
-SELECT COUNT(*) FROM pg_stat_activity
-WHERE datname = 'db_3';
+SELECT * FROM current_database();
+
+SELECT COUNT(*) FROM pg_stat_activity;
 
 ---------- PROCEDURES
 
@@ -71,4 +72,30 @@ BEGIN
     VALUES (name, username, password, jdbc_url, driver_class_name);
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION get_datasource(db_name varchar)
+RETURNS TABLE (id int, name varchar, username varchar, password varchar, jdbc_url varchar, driver_class_name varchar)
+LANGUAGE plpgsql
+AS $$
+   BEGIN
+       RETURN QUERY
+       SELECT db.id, db.name, db.username, db.password, db.jdbc_url, db.driver_class_name
+       FROM databases db
+       WHERE db.name ~~* db_name;
+   END;
+$$;
+DROP FUNCTION get_datasource(db_name varchar);
+
+CREATE OR REPLACE FUNCTION get_all_datasources()
+RETURNS TABLE (id int, name varchar, username varchar, password varchar, jdbc_url varchar, driver_class_name varchar)
+LANGUAGE plpgsql
+AS $$
+    BEGIN
+     RETURN QUERY
+        SELECT * FROM databases;
+    END;
+$$;
+
+SELECT * FROM get_all_datasources();
+
 
