@@ -45,7 +45,7 @@ SELECT name, username, password, jdbc_url FROM databases;
 SELECT *
 FROM databases;
 
-SELECT COUNT(*) FROM pg_stat_activity;
+SELECT * FROM pg_stat_activity;
 
 DELETE FROM databases
 WHERE name = 'db_2';

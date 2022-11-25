@@ -5,6 +5,7 @@ import com.internship.service.service.rootdb.MainDatabaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -13,10 +14,8 @@ public class MainDatabaseController {
     @Autowired
     private MainDatabaseService mainDataBaseService;
 
-
     @PostMapping("databases")
     public void addDataSource(@RequestBody DataSourceEntity dataSourceEntity) {
-        System.out.println(dataSourceEntity.getName());
         mainDataBaseService.addDataSource(dataSourceEntity);
     }
 
@@ -30,13 +29,8 @@ public class MainDatabaseController {
         return mainDataBaseService.findAll();
     }
 
-    @GetMapping("cached/{name}")
-    public DataSourceEntity getCachedValue(@PathVariable("name") String name) {
-        return mainDataBaseService.getCachedDb(name);
-    }
-
     @GetMapping("databases/{username}")
-    public DataSourceEntity findByName(@PathVariable("username") String name) {
+    public DataSourceEntity findByName(@PathVariable("username") String name) throws SQLException {
         return mainDataBaseService.findByName(name);
     }
 }
