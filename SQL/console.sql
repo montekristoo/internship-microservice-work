@@ -7,7 +7,8 @@ CREATE TABLE databases
     jdbc_url VARCHAR NOT NULL
 );
 
-SELECT * FROM databases;
+SELECT *
+FROM databases;
 
 ALTER TABLE databases
     ADD CONSTRAINT unique_name UNIQUE (name);
@@ -20,10 +21,10 @@ ALTER SEQUENCE databases_id_seq
 
 TRUNCATE TABLE databases;
 ALTER TABLE databases
-ADD COLUMN driver_class_name varchar;
+    ADD COLUMN driver_class_name varchar;
 
 UPDATE databases
-    SET driver_class_name = 'org.postgresql.Driver';
+SET driver_class_name = 'org.postgresql.Driver';
 
 INSERT INTO databases (name, username, password, jdbc_url)
 VALUES ('db_1', 'postgres', 'internship', 'jdbc:postgresql://localhost:5432/db_1'),
@@ -33,24 +34,29 @@ VALUES ('db_1', 'postgres', 'internship', 'jdbc:postgresql://localhost:5432/db_1
 INSERT INTO databases (name, username, password, jdbc_url)
 VALUES ('main_db', 'postgres', 'internship', 'jdbc:postgresql://localhost:5432/main_db');
 
-DELETE FROM databases
+DELETE
+FROM databases
 WHERE name = 'main_db';
 
 UPDATE databases
 SET password = crypt(password, gen_salt('bf'))
 WHERE name = 'main_db';
 
-SELECT name, username, password, jdbc_url FROM databases;
+SELECT name, username, password, jdbc_url
+FROM databases;
 
 SELECT *
 FROM databases;
 
-SELECT * FROM pg_stat_activity;
+SELECT *
+FROM pg_stat_activity;
 
-DELETE FROM databases
+DELETE
+FROM databases
 WHERE name = 'db_2';
 
-SELECT * FROM databases;
+SELECT *
+FROM databases;
 
 SELECT *
 FROM pg_stat_activity;
@@ -58,44 +64,83 @@ FROM pg_stat_activity;
 
 CREATE DATABASE db_4;
 
-SELECT * FROM current_database();
+SELECT *
+FROM current_database();
 
-SELECT COUNT(*) FROM pg_stat_activity;
+TRUNCATE test_table;
+
+SELECT COUNT(*)
+FROM pg_stat_activity;
+
+ALTER TABLE databases
+    ADD COLUMN password_salt varchar DEFAULT NULL;
+
+ALTER TABLE databases
+    DROP COLUMN password_salt;
 
 ---------- PROCEDURES
 
-CREATE OR REPLACE PROCEDURE add_datasource(name varchar, username varchar, password varchar, jdbc_url varchar, driver_class_name varchar)
+CREATE OR REPLACE PROCEDURE add_database(name varchar, username varchar, password varchar, jdbc_url varchar,
+                                         driver_class_name varchar, password_salt varchar)
     LANGUAGE plpgsql
-AS $$
+AS
+$$
 BEGIN
-    INSERT INTO databases (name, username, password, jdbc_url, driver_class_name)
-    VALUES (name, username, password, jdbc_url, driver_class_name);
+    INSERT INTO databases (name, username, password, jdbc_url, driver_class_name, password_salt)
+    VALUES (name, username, password, jdbc_url, driver_class_name, password_salt);
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION get_datasource(db_name varchar)
-RETURNS TABLE (id int, name varchar, username varchar, password varchar, jdbc_url varchar, driver_class_name varchar)
-LANGUAGE plpgsql
-AS $$
-   BEGIN
-       RETURN QUERY
-       SELECT db.id, db.name, db.username, db.password, db.jdbc_url, db.driver_class_name
-       FROM databases db
-       WHERE db.name ~~* db_name;
-   END;
-$$;
-DROP FUNCTION get_datasource(db_name varchar);
+DROP PROCEDURE add_database(name varchar, username varchar, password varchar, jdbc_url varchar);
 
-CREATE OR REPLACE FUNCTION get_all_datasources()
-RETURNS TABLE (id int, name varchar, username varchar, password varchar, jdbc_url varchar, driver_class_name varchar)
-LANGUAGE plpgsql
-AS $$
-    BEGIN
-     RETURN QUERY
+CREATE OR REPLACE FUNCTION get_database(db_name varchar)
+    RETURNS TABLE
+            (
+                id                int,
+                name              varchar,
+                username          varchar,
+                password          varchar,
+                jdbc_url          varchar,
+                driver_class_name varchar,
+                password_salt     varchar
+            )
+    LANGUAGE plpgsql
+AS
+$$
+BEGIN
+    RETURN QUERY
+        SELECT db.id, db.name, db.username, db.password, db.jdbc_url, db.driver_class_name, db.password_salt
+        FROM databases db
+        WHERE db.name ~~* db_name;
+END;
+$$;
+
+DROP FUNCTION get_database(db_name varchar);
+
+
+CREATE OR REPLACE FUNCTION get_all_databases()
+    RETURNS TABLE
+            (
+                id                int,
+                name              varchar,
+                username          varchar,
+                password          varchar,
+                jdbc_url          varchar,
+                driver_class_name varchar,
+                salt              varchar
+            )
+    LANGUAGE plpgsql
+AS
+$$
+BEGIN
+    RETURN QUERY
         SELECT * FROM databases;
-    END;
+END;
 $$;
 
-SELECT * FROM get_all_datasources();
+DROP FUNCTION get_all_databases();
+
+SELECT *
+FROM get_all_datasources();
 
 

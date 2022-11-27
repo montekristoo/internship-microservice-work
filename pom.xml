@@ -9,11 +9,11 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.mall</groupId>
-    <artifactId>service</artifactId>
+    <groupId>com.internship</groupId>
+    <artifactId>microservice</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>service</name>
-    <description>service</description>
+    <name>microservice</name>
+    <description>microservice</description>
 
     <properties>
         <java.version>17</java.version>
