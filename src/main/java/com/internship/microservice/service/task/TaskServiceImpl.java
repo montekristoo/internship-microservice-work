@@ -20,8 +20,8 @@ public class TaskServiceImpl implements TaskService {
     private final DataSourceService dataSourceService;
     private final RoutingDataSource routingDataSource;
     private final DataSourceContext dataSourceContext;
-    private final int TIMER = 5000;
     private final TaskService taskService;
+    private final int TIMER = 5000;
 
     @Autowired
     public TaskServiceImpl(DataSourceService dataSourceService, RoutingDataSource routingDataSource,
@@ -38,7 +38,6 @@ public class TaskServiceImpl implements TaskService {
             taskService.connect(database.getName());
         }
     }
-
     public void connect(String name) {
         dataSourceService.addTestData(new TaskEntity(null, "test"));
     }

@@ -2,7 +2,6 @@ package com.internship.microservice.service.datasource;
 
 import com.internship.microservice.entity.DataSourceEntity;
 import com.internship.microservice.entity.TaskEntity;
-import com.internship.microservice.exception.DatabaseAlreadyExists;
 import com.internship.microservice.exception.DatabaseNotFoundException;
 import com.internship.microservice.mapper.DataSourceDbMapper;
 import com.internship.microservice.util.PasswordUtils;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -26,9 +24,6 @@ public class DataSourceServiceImpl implements DataSourceService {
 
     @Override
     public void addDataSource(DataSourceEntity dataSrc) {
-        if (findByName(dataSrc.getName()) != null) {
-            throw new DatabaseAlreadyExists(dataSrc.getName());
-        }
         PasswordUtils.writeToFile(dataSrc.getName(), dataSrc.getPassword());
         byte[] salt = PasswordUtils.generateSalt();
         String password = PasswordUtils.generateHashingPassword(dataSrc.getPassword(), salt);
@@ -58,7 +53,11 @@ public class DataSourceServiceImpl implements DataSourceService {
 
     @Override
     public DataSourceEntity findByName(String name) {
-        return dbMapper.findByName(name);
+        DataSourceEntity dataSrc = dbMapper.findByName(name);
+        if (dataSrc == null) {
+            throw new DatabaseNotFoundException(name);
+        }
+        return dataSrc;
     }
 
     @Override
@@ -69,10 +68,5 @@ public class DataSourceServiceImpl implements DataSourceService {
     @Override
     public void addTestData(TaskEntity task) {
         dbMapper.addTestData(task);
-    }
-
-    @Override
-    public Map<String, String> getPasswordAndSalt(Long id) {
-        return dbMapper.getPasswordAndSalt(id);
     }
 }

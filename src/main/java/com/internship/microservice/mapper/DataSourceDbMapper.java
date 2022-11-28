@@ -6,7 +6,6 @@ import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.StatementType;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface DataSourceDbMapper {
@@ -45,13 +44,10 @@ public interface DataSourceDbMapper {
             ".password}, " +
             "jdbc_url=#{dataSrc.jdbcUrl}, " +
             "driver_class_name = #{dataSrc.driverClassName}," +
-            "salt = #{dataSrc.salt} " +
-            "WHERE id = #{dataSrc.id}")
+            "password_salt = #{dataSrc.salt} " +
+            "WHERE id = #{id}")
     void updateDatabase(DataSourceEntity dataSrc, Long id);
 
     @Insert("INSERT INTO test_table (description) VALUES (#{description})")
     void addTestData(TaskEntity task);
-
-    @Select("SELECT password, password_salt FROM databases WHERE id = #{id}")
-    Map<String, String> getPasswordAndSalt(@Param("id") Long id);
 }

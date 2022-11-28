@@ -34,14 +34,13 @@ public class MainDatabaseConfig {
         return routingDataSource;
     }
 
-    @Bean
     public DataSource defaultDataSource() {
         HikariConfig config = new HikariConfig();
         config.setUsername(username);
         config.setPassword(password);
         config.setJdbcUrl(jdbcUrl);
         config.setDriverClassName(driverClassName);
-        config.setPoolName("DEFAULT");
+        config.setPoolName(DEFAULT);
         return new HikariDataSource(config);
     }
 

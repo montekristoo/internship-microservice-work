@@ -18,6 +18,7 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
         if (DataSourceContext.getCurrentContext() == null) {
             return null;
         }
+
         return DataSourceContext.getCurrentContext();
     }
 

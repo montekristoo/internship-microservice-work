@@ -6,9 +6,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
 public class WrongDatabaseCredentialsException extends RuntimeException{
 
-    public WrongDatabaseCredentialsException() {
-    }
-
     public WrongDatabaseCredentialsException(String message) {
         super("Wrong credentials for " + message + " database");
     }

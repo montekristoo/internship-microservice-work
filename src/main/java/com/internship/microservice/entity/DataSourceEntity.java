@@ -1,14 +1,12 @@
 package com.internship.microservice.entity;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
-import java.io.Serializable;
 import java.util.Objects;
-
-@Getter
-@Setter
-@NoArgsConstructor
-public class DataSourceEntity implements Serializable {
+@Data
+@Builder
+public class DataSourceEntity{
     private Long id;
     private String name;
     private String username;

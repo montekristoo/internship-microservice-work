@@ -141,6 +141,10 @@ $$;
 DROP FUNCTION get_all_databases();
 
 SELECT *
-FROM get_all_datasources();
+FROM get_all_databases();
+
+CREATE DATABASE test_db;
+DELETE FROM databases
+WHERE name = 'test_db'
 
 

@@ -10,13 +10,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/")
-public class MainDatabaseController {
+public class DataSourceController {
 
     private final DataSourceService dataSourceService;
-    private final TaskService taskService;
-    public MainDatabaseController(DataSourceService dataSourceService, TaskService taskService) {
+
+    public DataSourceController(DataSourceService dataSourceService) {
         this.dataSourceService = dataSourceService;
-        this.taskService = taskService;
     }
 
     @PostMapping("databases")
@@ -34,18 +33,13 @@ public class MainDatabaseController {
         return dataSourceService.findAll();
     }
 
-    @GetMapping("databases/{username}")
-    public DataSourceEntity findByName(@PathVariable("username") String name) throws SQLException {
+    @GetMapping("databases/{name}")
+    public DataSourceEntity findByName(@PathVariable("name") String name) throws SQLException {
         return dataSourceService.findByName(name);
     }
 
     @PatchMapping("databases")
     public void updateDatabase(@RequestBody DataSourceEntity dataSrc) {
         dataSourceService.updateDatabase(dataSrc, dataSrc.getId());
-    }
-
-    @GetMapping("databases/routing")
-    public void routing() {
-        taskService.routing();
     }
 }

@@ -17,10 +17,10 @@ import java.util.Base64;
 public class PasswordUtils {
     private static final SecureRandom secureRandom = new SecureRandom();
 
-
     public static byte[] generateSalt() {
         byte[] salt = new byte[32];
         secureRandom.nextBytes(salt);
+
         return salt;
     }
 
@@ -38,15 +38,14 @@ public class PasswordUtils {
         } catch (InvalidKeySpecException e) {
             throw new RuntimeException(e);
         }
+
         return Base64Utils.encodeToString(hash);
     }
 
     public static boolean verifyPassword(String passwordFromDb, String hashFromDb, String clientPassword) {
-        System.out.println(hashFromDb);
         byte[] salt = Base64.getDecoder().decode(hashFromDb);
-        System.out.println(clientPassword);
         String passwordToVerify = generateHashingPassword(clientPassword, salt);
-        System.out.println(passwordToVerify);
+
         return passwordFromDb.equals(passwordToVerify);
     }
 
