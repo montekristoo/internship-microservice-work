@@ -2,7 +2,6 @@ package com.internship.microservice.controller;
 
 import com.internship.microservice.entity.DataSourceEntity;
 import com.internship.microservice.service.datasource.DataSourceService;
-import com.internship.microservice.service.task.TaskService;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -19,8 +18,9 @@ public class DataSourceController {
     }
 
     @PostMapping("databases")
-    public void addDataSource(@RequestBody DataSourceEntity dataSourceEntity) {
-        dataSourceService.addDataSource(dataSourceEntity);
+    public void addDataSource(@RequestBody DataSourceEntity dataSource) {
+        dataSourceService.addDataSource(dataSource);
+
     }
 
     @DeleteMapping("databases/{name}")

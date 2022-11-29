@@ -147,4 +147,7 @@ CREATE DATABASE test_db;
 DELETE FROM databases
 WHERE name = 'test_db'
 
+select datname
+from pg_database
+WHERE length(datname) = 2;
 

@@ -22,7 +22,7 @@ public class DataSourceAspect {
         this.dataSourceContext = dataSourceContext;
     }
 
-    @Pointcut("execution(* com.internship.microservice.service.task.TaskServiceImpl.connect(String))")
+    @Pointcut("execution(* com.internship.microservice.service.task.TaskServiceImpl.connect(String, java.util.List))")
     public void methodPointCut() {
     }
 

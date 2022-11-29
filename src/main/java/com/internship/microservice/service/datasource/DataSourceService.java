@@ -14,4 +14,8 @@ public interface DataSourceService {
     String getCurrentDatabase();
     void updateDatabase(DataSourceEntity dataSrc, Long id);
     void addTestData(TaskEntity task);
+    List<String> findAllDbNames();
+    List<String> findCountriesDatabases();
+    void createTableUsers();
+    void dropTableUsers();
 }

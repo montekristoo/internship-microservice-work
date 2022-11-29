@@ -2,11 +2,13 @@ package com.internship.microservice.service.datasource;
 
 import com.internship.microservice.entity.DataSourceEntity;
 import com.internship.microservice.entity.TaskEntity;
+import com.internship.microservice.exception.DatabaseAlreadyExists;
 import com.internship.microservice.exception.DatabaseNotFoundException;
-import com.internship.microservice.mapper.DataSourceDbMapper;
+import com.internship.microservice.mapper.DataSourceMapper;
 import com.internship.microservice.util.PasswordUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
@@ -14,16 +16,20 @@ import java.util.List;
 
 @Slf4j
 @Service
+@EnableScheduling
 public class DataSourceServiceImpl implements DataSourceService {
-    private final DataSourceDbMapper dbMapper;
+    private final DataSourceMapper dbMapper;
 
     @Autowired
-    public DataSourceServiceImpl(DataSourceDbMapper dbMapper) {
+    public DataSourceServiceImpl(DataSourceMapper dbMapper) {
         this.dbMapper = dbMapper;
     }
 
     @Override
     public void addDataSource(DataSourceEntity dataSrc) {
+        if (dbMapper.findByName(dataSrc.getName()) != null) {
+            throw new DatabaseAlreadyExists(dataSrc.getName());
+        }
         PasswordUtils.writeToFile(dataSrc.getName(), dataSrc.getPassword());
         byte[] salt = PasswordUtils.generateSalt();
         String password = PasswordUtils.generateHashingPassword(dataSrc.getPassword(), salt);
@@ -68,5 +74,36 @@ public class DataSourceServiceImpl implements DataSourceService {
     @Override
     public void addTestData(TaskEntity task) {
         dbMapper.addTestData(task);
+    }
+
+    @Override
+    public List<String> findAllDbNames() {
+        return dbMapper.findAllDbNames();
+    }
+
+    @Override
+    public List<String> findCountriesDatabases() {
+        return dbMapper.findCountriesDatabases();
+    }
+
+    @Override
+    public void createTableUsers() {
+//        SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
+//        try {
+//            UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+//            for (String name : names) {
+//                mapper.insertName(name);
+//            }
+//            sqlSession.commit();
+//        } finally {
+//            sqlSession.close();
+//            sqlSession.
+//        }
+        dbMapper.createTableUsers();
+    }
+
+    @Override
+    public void dropTableUsers() {
+        dbMapper.dropTableUsers();
     }
 }

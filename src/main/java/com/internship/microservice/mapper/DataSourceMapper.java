@@ -8,7 +8,7 @@ import org.apache.ibatis.mapping.StatementType;
 import java.util.List;
 
 @Mapper
-public interface DataSourceDbMapper {
+public interface DataSourceMapper {
 
     @Select("SELECT * FROM databases WHERE name = #{name}")
     @Results(id = "dataSourceResult", value = {
@@ -50,4 +50,17 @@ public interface DataSourceDbMapper {
 
     @Insert("INSERT INTO test_table (description) VALUES (#{description})")
     void addTestData(TaskEntity task);
+    
+    @Select("SELECT datname FROM pg_database")
+    List<String> findAllDbNames();
+
+    @Select("SELECT datname FROM pg_database WHERE length(datname) = 2")
+    List<String> findCountriesDatabases();
+
+    @Insert("CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, first_name varchar, last_name varchar, genre varchar, " +
+            "date_of_birth date, nationality varchar, username varchar, password varchar)")
+    void createTableUsers();
+
+    @Delete("DROP TABLE IF EXISTS users")
+    void dropTableUsers();
 }
