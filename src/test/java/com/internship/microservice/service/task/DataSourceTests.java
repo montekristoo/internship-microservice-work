@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@Transactional
 class DataSourceTests {
     @Autowired
     private DataSourceContext dataSourceContext;
@@ -53,7 +54,6 @@ class DataSourceTests {
     }
 
     @Test
-    @Transactional
     public void givenNewInsertedDatabase_thenCheckIfItIsHasBeenAdded() {
         DataSourceEntity dataSrc = DataSourceEntity.builder()
                 .name("test_db")
@@ -71,7 +71,6 @@ class DataSourceTests {
     }
 
     @Test
-    @Transactional
     public void givenDatabaseToRemove_thenCheckIfItIsHasBeenDeleted() {
         dataSourceService.removeDataSource("db_1");
         int size = dataSourceService.findAll().size();
@@ -80,7 +79,6 @@ class DataSourceTests {
 
     @SneakyThrows
     @Test
-    @Transactional
     public void givenDatabaseToUpdate_thenCheckIfItHasBeenUpdated() {
         DataSourceEntity dataSrc = dataSourceService.findByName("db_1");
         String newName = "updated_db";

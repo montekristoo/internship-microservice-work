@@ -7,28 +7,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.sql.SQLException;
+import javax.sql.DataSource;
 
 
 @Component
 @Slf4j
 public class DataSourceContext {
-    private final RoutingDataSource routingDataSource;
-    private final DataSourceService mainDbService;
-    private final DataSourceConverter dsConverter;
+    @Autowired
+    private RoutingDataSource routingDataSource;
+    @Autowired
+    private DataSourceService mainDbService;
+    @Autowired
+    private DataSourceConverter dsConverter;
     private final static ThreadLocal<String> context = new ThreadLocal<>();
 
-    @Autowired
-    public DataSourceContext(RoutingDataSource routingDataSource, DataSourceService mainDbService,
-                             DataSourceConverter dsConverter) {
-        this.routingDataSource = routingDataSource;
-        this.mainDbService = mainDbService;
-        this.dsConverter = dsConverter;
-    }
 
-    public void setContext(String targetDataSource) throws SQLException {
+    public void setContext(String targetDataSource) throws Exception {
         DataSourceEntity dataSourceEntity = mainDbService.findByName(targetDataSource);
-        routingDataSource.addDataSource(targetDataSource, dsConverter.entityToDataSource(dataSourceEntity));
+        DataSource dataSource = dsConverter.entityToDataSource(dataSourceEntity);
+        routingDataSource.addDataSource(targetDataSource, dataSource);
         context.set(targetDataSource);
     }
 

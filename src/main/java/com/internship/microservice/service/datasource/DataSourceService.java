@@ -1,7 +1,6 @@
 package com.internship.microservice.service.datasource;
 
 import com.internship.microservice.entity.DataSourceEntity;
-import com.internship.microservice.entity.TaskEntity;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -13,9 +12,6 @@ public interface DataSourceService {
     DataSourceEntity findByName(String name) throws SQLException;
     String getCurrentDatabase();
     void updateDatabase(DataSourceEntity dataSrc, Long id);
-    void addTestData(TaskEntity task);
-    List<String> findAllDbNames();
-    List<String> findCountriesDatabases();
     void createTableUsers();
     void dropTableUsers();
 }

@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping
-    public void addUsers(HttpServletRequest request, @RequestBody List<@Valid UserEntity> users) {
+    public void addUsers(@RequestBody List<@Valid UserEntity> users) {
        userService.addUsers(users);
     }
 }

@@ -36,7 +36,7 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
     }
 
     @Override
-    protected DataSource determineTargetDataSource() {
+    public DataSource determineTargetDataSource() {
         return super.determineTargetDataSource();
     }
 

@@ -151,3 +151,10 @@ select datname
 from pg_database
 WHERE length(datname) = 2;
 
+
+insert into tegfd(id, u) VALUES (1, 233);
+
+
+INSERT INTO tegfd(id, u) VALUES (1, 233),
+                                 (1, 233);
+

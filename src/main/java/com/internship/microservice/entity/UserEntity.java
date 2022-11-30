@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Data
 public class UserEntity {
-    private String id;
+    private Long id;
     @NotNull
     private String firstName;
     @NotNull

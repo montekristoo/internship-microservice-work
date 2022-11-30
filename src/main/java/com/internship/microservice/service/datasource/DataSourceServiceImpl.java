@@ -70,22 +70,6 @@ public class DataSourceServiceImpl implements DataSourceService {
     public String getCurrentDatabase() {
         return dbMapper.getCurrentDatabase();
     }
-
-    @Override
-    public void addTestData(TaskEntity task) {
-        dbMapper.addTestData(task);
-    }
-
-    @Override
-    public List<String> findAllDbNames() {
-        return dbMapper.findAllDbNames();
-    }
-
-    @Override
-    public List<String> findCountriesDatabases() {
-        return dbMapper.findCountriesDatabases();
-    }
-
     @Override
     public void createTableUsers() {
 //        SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
