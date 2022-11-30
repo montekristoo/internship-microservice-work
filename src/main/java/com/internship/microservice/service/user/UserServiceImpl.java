@@ -1,18 +1,12 @@
 package com.internship.microservice.service.user;
 
 import com.internship.microservice.entity.UserEntity;
-import com.internship.microservice.exception.DatabaseNotFoundException;
 import com.internship.microservice.service.routing.RoutingService;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.guice.transactional.Isolation;
-import org.mybatis.guice.transactional.Transactional;
-import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +17,6 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     @Autowired
     private RoutingService routingService;
-    @Autowired
-    private SqlSessionFactory sessionFactory;
     private static final List<UserEntity> dbAndUsers = new ArrayList<>();
     private static final int BATCH_SIZE = 20;
 
@@ -43,20 +35,18 @@ public class UserServiceImpl implements UserService {
         });
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void sendToTransactionContainer(Map<String, List<UserEntity>> dbUsersToSend) {
-        SqlSession sqlSession = sessionFactory.openSession(ExecutorType.BATCH);
-        try {
-            dbUsersToSend.keySet()
-                    .forEach((dbToConnect) -> {
-                        System.out.println(dbToConnect);
-                        routingService.connect(dbToConnect.toLowerCase(), dbUsersToSend.get(dbToConnect));
-                    });
-            sqlSession.commit();
-        } catch (Exception e) {
-            e.getCause();
-            sqlSession.rollback();
-        } finally {
-            sqlSession.close();
-        }
+            try {
+                System.out.println(TransactionSynchronizationManager.getCurrentTransactionName());
+                dbUsersToSend.keySet()
+                        .forEach((dbToConnect) -> {
+                            System.out.println(dbToConnect);
+                            routingService.connect(dbToConnect.toLowerCase(), dbUsersToSend.get(dbToConnect));
+                        });
+            }
+            catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
     }
 }

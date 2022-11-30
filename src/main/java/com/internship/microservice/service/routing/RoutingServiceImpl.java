@@ -3,13 +3,14 @@ package com.internship.microservice.service.routing;
 import com.internship.microservice.entity.UserEntity;
 import com.internship.microservice.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.guice.transactional.Transactional;
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.util.List;
 
@@ -18,16 +19,15 @@ import java.util.List;
 @EnableScheduling
 public class RoutingServiceImpl implements RoutingService {
     @Autowired
-    private SqlSessionFactory sessionFactory;
-    @Autowired
     private UserMapper userMapper;
-
 
     @Override
     public void connect(String name, List<UserEntity> users) {
         if (name.equals("md")) {
-            users.get(4).setGenre("GGGGGG");
+            int i = 1/0;
         }
+        System.out.println(TransactionSynchronizationManager.getCurrentTransactionName());
+        System.out.println(users);
         users.forEach(userMapper::addUser);
     }
 }
