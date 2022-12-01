@@ -9,7 +9,7 @@ public interface DataSourceService {
     void addDataSource(DataSourceEntity dataSrc);
     void removeDataSource(String name);
     List<DataSourceEntity> findAll();
-    DataSourceEntity findByName(String name) throws SQLException;
+    DataSourceEntity findByName(String name);
     String getCurrentDatabase();
     void updateDatabase(DataSourceEntity dataSrc, Long id);
     void createTableUsers();

@@ -22,7 +22,7 @@ public class DataSourceContext {
     private final static ThreadLocal<String> context = new ThreadLocal<>();
 
 
-    public void setContext(String targetDataSource) throws Exception {
+    public void setContext(String targetDataSource) {
         DataSourceEntity dataSourceEntity = mainDbService.findByName(targetDataSource);
         DataSource dataSource = dsConverter.entityToDataSource(dataSourceEntity);
         routingDataSource.addDataSource(targetDataSource, dataSource);

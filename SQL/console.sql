@@ -145,7 +145,7 @@ FROM get_all_databases();
 
 CREATE DATABASE test_db;
 DELETE FROM databases
-WHERE name = 'test_db'
+WHERE name = 'test_db';
 
 select datname
 from pg_database
@@ -155,6 +155,14 @@ WHERE length(datname) = 2;
 insert into tegfd(id, u) VALUES (1, 233);
 
 
-INSERT INTO tegfd(id, u) VALUES (1, 233),
-                                 (1, 233);
+BEGIN TRANSACTION;
+INSERT INTO test_table (description)
+VALUES ('testTT');
+ BEGIN TRANSACTION;
+INSERT INTO test_table_2 (value)
+VALUES (2);
+END WORK;
+END WORK;
+
+ROLLBACK;
 

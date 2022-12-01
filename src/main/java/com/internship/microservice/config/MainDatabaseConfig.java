@@ -3,9 +3,6 @@ package com.internship.microservice.config;
 import com.internship.microservice.routing.RoutingDataSource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +30,6 @@ public class MainDatabaseConfig {
         final RoutingDataSource routingDataSource = new RoutingDataSource();
         routingDataSource.setDefaultTargetDataSource(defaultDataSource());
         routingDataSource.addDataSource(DEFAULT, defaultDataSource());
-        routingDataSource.setLenientFallback(false);
         return routingDataSource;
     }
 
@@ -45,11 +41,6 @@ public class MainDatabaseConfig {
         config.setDriverClassName(driverClassName);
         config.setPoolName(DEFAULT);
         return new HikariDataSource(config);
-    }
-
-    @Bean
-    public SqlSessionTemplate sqlSession(SqlSessionFactory sqlSessionFactory) {
-        return new SqlSessionTemplate(sqlSessionFactory, ExecutorType.BATCH);
     }
 
 }

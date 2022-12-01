@@ -13,6 +13,7 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
 
     private static final Map<Object, DataSource> sources = new HashMap<>();
 
+
     @Override
     public Object determineCurrentLookupKey() {
         if (DataSourceContext.getCurrentContext() == null) {
@@ -30,9 +31,15 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
         afterPropertiesSet();
     }
 
+
     @Override
     public void setTargetDataSources(Map<Object, Object> targetDataSources) {
         super.setTargetDataSources(targetDataSources);
+    }
+
+    @Override
+    public DataSource getResolvedDefaultDataSource() {
+        return super.getResolvedDefaultDataSource();
     }
 
     @Override

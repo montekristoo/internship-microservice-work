@@ -2,32 +2,58 @@ package com.internship.microservice.service.routing;
 
 import com.internship.microservice.entity.UserEntity;
 import com.internship.microservice.mapper.UserMapper;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.postgresql.util.PSQLException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.guice.MyBatisModule;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.util.List;
 
 @Slf4j
 @Service
-@EnableScheduling
+
 public class RoutingServiceImpl implements RoutingService {
-    @Autowired
-    private UserMapper userMapper;
+
+//    @Override
+//    public void connect(String name, List<UserEntity> users) {
+//        Connection connection = null;
+////            if (name.equals("md")) {
+////                users.get(4).setGenre("incorrect result man");
+////            }
+//        try {
+//            connection = routingDataSource.determineTargetDataSource().getConnection();
+//            connection.setAutoCommit(false);
+//            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users (first_name, last_name, genre, date_of_birth, nationality, username, password)" +
+//                    " VALUES (?, ?, ?, ?, ?, ?, ?)");
+//            Iterator<UserEntity> iterator = users.iterator();
+//            while (iterator.hasNext()) {
+//                UserEntity user = iterator.next();
+//                preparedStatement.setString(1, user.getFirstName());
+//                preparedStatement.setString(2, user.getLastName());
+//                preparedStatement.setString(3, user.getGenre());
+//                preparedStatement.setDate(4, user.getDateOfBirth());
+//                preparedStatement.setString(5, user.getNationality());
+//                preparedStatement.setString(6, user.getPassword());
+//                preparedStatement.setString(7, user.getUsername());
+//                preparedStatement.addBatch();
+//            }
+//            connections.put(connection, preparedStatement);
+//        }
+//        catch (SQLException sqlException) {
+//            ROLLBACK = true;
+//            sqlException.getMessage();
+//        }
+//    }
+
+
+    //TODO XADataSource, JPBoss study
 
     @Override
-    public void connect(String name, List<UserEntity> users) {
-        if (name.equals("md")) {
-            int i = 1/0;
-        }
-        System.out.println(TransactionSynchronizationManager.getCurrentTransactionName());
-        System.out.println(users);
-        users.forEach(userMapper::addUser);
+    @SneakyThrows
+    public void connect(SqlSession sqlSession, String name, List<UserEntity> users) {
+        UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+        System.out.println(sqlSession.getConnection().getCatalog());
+        users.forEach(mapper::addUser);
     }
 }
