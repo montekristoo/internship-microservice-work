@@ -26,6 +26,7 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
     public void addDataSource(String name, DataSource source) {
         log.info("Name entry: " + name);
         sources.put(name, source);
+        System.out.println(sources);
         Map<Object, Object> dataSourcesToObjects = new HashMap<>(sources);
         setTargetDataSources(dataSourcesToObjects);
         afterPropertiesSet();

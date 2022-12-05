@@ -1,7 +1,6 @@
 package com.internship.microservice.mapper;
 
 import com.internship.microservice.entity.DataSourceEntity;
-import com.internship.microservice.entity.TaskEntity;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.StatementType;
 
@@ -47,20 +46,4 @@ public interface DataSourceMapper {
             "password_salt = #{dataSrc.salt} " +
             "WHERE id = #{id}")
     void updateDatabase(DataSourceEntity dataSrc, Long id);
-
-    @Insert("INSERT INTO test_table (description) VALUES (#{description})")
-    void addTestData(TaskEntity task);
-    
-    @Select("SELECT datname FROM pg_database")
-    List<String> findAllDbNames();
-
-    @Select("SELECT datname FROM pg_database WHERE length(datname) = 2")
-    List<String> findCountriesDatabases();
-
-    @Insert("CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, first_name varchar, last_name varchar, genre varchar, " +
-            "date_of_birth date, nationality varchar, username varchar, password varchar)")
-    void createTableUsers();
-
-    @Delete("DROP TABLE IF EXISTS users")
-    void dropTableUsers();
 }

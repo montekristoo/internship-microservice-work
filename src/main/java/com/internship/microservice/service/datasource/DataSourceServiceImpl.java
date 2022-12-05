@@ -1,7 +1,6 @@
 package com.internship.microservice.service.datasource;
 
 import com.internship.microservice.entity.DataSourceEntity;
-import com.internship.microservice.entity.TaskEntity;
 import com.internship.microservice.exception.DatabaseAlreadyExists;
 import com.internship.microservice.exception.DatabaseNotFoundException;
 import com.internship.microservice.mapper.DataSourceMapper;
@@ -70,24 +69,5 @@ public class DataSourceServiceImpl implements DataSourceService {
     public String getCurrentDatabase() {
         return dbMapper.getCurrentDatabase();
     }
-    @Override
-    public void createTableUsers() {
-//        SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
-//        try {
-//            UserMapper mapper = sqlSession.getMapper(UserMapper.class);
-//            for (String name : names) {
-//                mapper.insertName(name);
-//            }
-//            sqlSession.commit();
-//        } finally {
-//            sqlSession.close();
-//            sqlSession.
-//        }
-        dbMapper.createTableUsers();
-    }
 
-    @Override
-    public void dropTableUsers() {
-        dbMapper.dropTableUsers();
-    }
 }

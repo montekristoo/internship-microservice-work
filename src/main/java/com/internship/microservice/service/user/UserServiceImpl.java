@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-//import org.mybatis.guice.transactional.
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -54,11 +53,5 @@ public class UserServiceImpl implements UserService {
         finally {
             sqlSession.close();
         }
-//        if (!RoutingServiceImpl.ROLLBACK) {
-//            dbUsersToSend.keySet()
-//                    .forEach((dbToConnect) -> {
-//                        routingService.sendToSecondPhase(dbToConnect.toLowerCase(), dbUsersToSend.get(dbToConnect));
-//                    });
-//        }
     }
 }
