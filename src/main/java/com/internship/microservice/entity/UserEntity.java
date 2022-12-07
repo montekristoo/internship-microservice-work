@@ -2,6 +2,7 @@ package com.internship.microservice.entity;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.sql.Date;
@@ -14,6 +15,7 @@ public class UserEntity {
     @NotNull
     private String lastName;
     @NotNull
+    @NotBlank
     private String genre;
     @NotNull
     private Date dateOfBirth;

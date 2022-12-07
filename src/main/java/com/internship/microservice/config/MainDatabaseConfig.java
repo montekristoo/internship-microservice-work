@@ -1,14 +1,18 @@
 package com.internship.microservice.config;
 
+import com.atomikos.icatch.jta.UserTransactionManager;
+import com.atomikos.jdbc.AtomikosDataSourceBean;
 import com.internship.microservice.routing.RoutingDataSource;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.transaction.TransactionManager;
+import org.springframework.transaction.jta.JtaTransactionManager;
 
 import javax.sql.DataSource;
+import java.util.Properties;
 
 
 @Configuration
@@ -20,8 +24,6 @@ public class MainDatabaseConfig {
     private String password;
     @Value("${spring.datasource.url}")
     private String jdbcUrl;
-    @Value("${spring.datasource.hikari.driver-class-name}")
-    private String driverClassName;
     private final static String DEFAULT = "main_db";
 
     @Bean
@@ -34,13 +36,31 @@ public class MainDatabaseConfig {
     }
 
     public DataSource defaultDataSource() {
-        HikariConfig config = new HikariConfig();
-        config.setUsername(username);
-        config.setPassword(password);
-        config.setJdbcUrl(jdbcUrl);
-        config.setDriverClassName(driverClassName);
-        config.setPoolName(DEFAULT);
-        return new HikariDataSource(config);
+        AtomikosDataSourceBean ds = new AtomikosDataSourceBean();
+        ds.setUniqueResourceName("default");
+        ds.setXaDataSourceClassName("org.postgresql.xa.PGXADataSource");
+        Properties p = new Properties();
+        p.setProperty("user", username);
+        p.setProperty("password", password);
+        p.setProperty("serverName", "localhost");
+        p.setProperty("portNumber", "3002");
+        p.setProperty("databaseName", "main_db");
+        ds.setXaProperties(p);
+        ds.setPoolSize(5);
+        return ds;
+    }
+
+    @SneakyThrows
+    @Bean
+    public UserTransactionManager userTransaction() {
+      UserTransactionManager userTransactionManager = new UserTransactionManager();
+      userTransactionManager.setForceShutdown(false);
+      return userTransactionManager;
+    }
+
+    @Bean
+    public TransactionManager jtaTransactionManager() {
+        return new JtaTransactionManager(userTransaction(), userTransaction());
     }
 
 }

@@ -151,10 +151,6 @@ select datname
 from pg_database
 WHERE length(datname) = 2;
 
-
-insert into tegfd(id, u) VALUES (1, 233);
-
-
 BEGIN TRANSACTION;
 INSERT INTO test_table (description)
 VALUES ('testTT');
@@ -164,5 +160,16 @@ VALUES (2);
 END WORK;
 END WORK;
 
-ROLLBACK;
+SELECT * FROM pg_prepared_xacts;
+
+BEGIN TRANSACTION;
+CREATE TABLE test(id int);
+PREPARE TRANSACTION 'foo';
+
+SHOW config_file;
+ALTER system SET max_prepared_transactions = 100;
+
+SELECT COUNT(*) FROM pg_stat_activity;
+
+
 

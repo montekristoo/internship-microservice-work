@@ -1,6 +1,7 @@
 package com.internship.microservice.aop;
 
 import com.internship.microservice.routing.DataSourceContext;
+import com.internship.microservice.routing.RoutingDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -21,20 +22,30 @@ public class DataSourceAspect {
 
     @Autowired
     private DataSourceContext dataSourceContext;
+    @Autowired
+    private RoutingDataSource routingDataSource;
 
     @Pointcut("execution(* com.internship.microservice.service.routing.RoutingServiceImpl.connect(String, java.util.List))")
-    public void methodPointCut() {
+    public void contextPointcut() {
     }
 
-    @Before("methodPointCut()")
-    public void before(JoinPoint joinPoint) throws Exception {
+    @Pointcut("execution(* com.internship.microservice.service.user.UserServiceImpl.sendToTransactionContainer(java.util.Map))")
+    public void closeCon() {
+    }
+
+    @Before("contextPointcut()")
+    public void before(JoinPoint joinPoint) {
         Object[] field = joinPoint.getArgs();
         dataSourceContext.setContext((String) field[0]);
         log.info(DataSourceContext.getCurrentContext());
     }
 
-    @After("methodPointCut()")
-    public void after() {
-        dataSourceContext.removeContext();
+    @After("closeCon()")
+    public void after(JoinPoint joinPoint) {
+        Object[] field = joinPoint.getArgs();
+        System.out.println(field[0]);
+        ((java.util.HashMap) field[0]).forEach((k, v) -> {
+            routingDataSource.closeDataSource((String) k);
+        });
     }
 }
