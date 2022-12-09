@@ -4,11 +4,16 @@ import com.atomikos.icatch.jta.UserTransactionManager;
 import com.atomikos.jdbc.AtomikosDataSourceBean;
 import com.internship.microservice.routing.RoutingDataSource;
 import lombok.SneakyThrows;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.transaction.TransactionFactory;
+import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.transaction.TransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.jta.JtaTransactionManager;
 
 import javax.sql.DataSource;
@@ -22,8 +27,6 @@ public class MainDatabaseConfig {
     private String username;
     @Value("${spring.datasource.password}")
     private String password;
-    @Value("${spring.datasource.url}")
-    private String jdbcUrl;
     private final static String DEFAULT = "main_db";
 
     @Bean
@@ -54,13 +57,21 @@ public class MainDatabaseConfig {
     @Bean
     public UserTransactionManager userTransaction() {
       UserTransactionManager userTransactionManager = new UserTransactionManager();
-      userTransactionManager.setForceShutdown(false);
+      userTransactionManager.setForceShutdown(true);
       return userTransactionManager;
     }
 
     @Bean
-    public TransactionManager jtaTransactionManager() {
+    public PlatformTransactionManager jtaTransactionManager() {
         return new JtaTransactionManager(userTransaction(), userTransaction());
+    }
+
+    @Bean
+    public SqlSessionFactory sqlSessionFactory() throws Exception {
+        SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
+        factoryBean.setDataSource(defaultDataSource());
+        factoryBean.setTransactionFactory(new JdbcTransactionFactory());
+        return factoryBean.getObject();
     }
 
 }

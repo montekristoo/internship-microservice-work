@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface UserService {
     void addUsers(List<UserEntity> users);
+    void connect(String name, List<UserEntity> users);
 }
