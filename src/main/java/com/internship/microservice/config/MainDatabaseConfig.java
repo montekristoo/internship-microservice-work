@@ -4,11 +4,6 @@ import com.atomikos.icatch.jta.UserTransactionManager;
 import com.atomikos.jdbc.AtomikosDataSourceBean;
 import com.internship.microservice.routing.RoutingDataSource;
 import lombok.SneakyThrows;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.transaction.TransactionFactory;
-import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
-import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +22,8 @@ public class MainDatabaseConfig {
     private String username;
     @Value("${spring.datasource.password}")
     private String password;
+    @Value("${spring.datasource.url}")
+    private String jdbcUrl;
     private final static String DEFAULT = "main_db";
 
     @Bean
@@ -46,7 +43,7 @@ public class MainDatabaseConfig {
         p.setProperty("user", username);
         p.setProperty("password", password);
         p.setProperty("serverName", "localhost");
-        p.setProperty("portNumber", "3002");
+        p.setProperty("portNumber", "5432");
         p.setProperty("databaseName", "main_db");
         ds.setXaProperties(p);
         ds.setPoolSize(5);
@@ -57,21 +54,13 @@ public class MainDatabaseConfig {
     @Bean
     public UserTransactionManager userTransaction() {
       UserTransactionManager userTransactionManager = new UserTransactionManager();
-      userTransactionManager.setForceShutdown(true);
+      userTransactionManager.setForceShutdown(false);
       return userTransactionManager;
     }
 
     @Bean
     public PlatformTransactionManager jtaTransactionManager() {
         return new JtaTransactionManager(userTransaction(), userTransaction());
-    }
-
-    @Bean
-    public SqlSessionFactory sqlSessionFactory() throws Exception {
-        SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
-        factoryBean.setDataSource(defaultDataSource());
-        factoryBean.setTransactionFactory(new JdbcTransactionFactory());
-        return factoryBean.getObject();
     }
 
 }

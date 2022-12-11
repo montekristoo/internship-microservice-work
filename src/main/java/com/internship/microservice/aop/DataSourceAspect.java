@@ -22,34 +22,36 @@ public class DataSourceAspect {
 
     @Autowired
     private DataSourceContext dataSourceContext;
+    @Autowired
+    private RoutingDataSource routingDataSource;
 
-    @Pointcut("execution(* com.internship.microservice.service.user.UserServiceImpl.connect(String, java.util.List))")
+    @Pointcut("execution(* com.internship.microservice.service.routing.RoutingServiceImpl.connect(String, java.util.List))")
     public void contextPointcut() {
     }
 
-    @Pointcut("execution(* com.internship.microservice.service.user.UserServiceImpl.sendToTransactionContainer(java.util.Map))")
+    @Pointcut("execution(* com.internship.microservice.service.user.UserServiceImpl.sendToTransactionContainer(java" +
+            ".util.Map))")
     public void closeCon() {
     }
 
     @Before("contextPointcut()")
     public void before(JoinPoint joinPoint) {
         Object[] field = joinPoint.getArgs();
-        System.out.println(field[0]);
         dataSourceContext.setContext((String) field[0]);
         log.info(DataSourceContext.getCurrentContext());
     }
 
-//    @After("closeCon()")
-//    public void after(JoinPoint joinPoint) {
-//        Object[] field = joinPoint.getArgs();
-//        System.out.println(field[0]);
-//        ((java.util.HashMap) field[0]).forEach((k, v) -> {
-//            routingDataSource.closeDataSource((String) k);
-//        });
-//    }
-
     @After("contextPointcut()")
-    public void after(JoinPoint joinPoint) {
+    public void afterContext(JoinPoint joinPoint) {
         dataSourceContext.removeContext();
+    }
+
+    @After("closeCon()")
+    public void after(JoinPoint joinPoint) {
+        Object[] field = joinPoint.getArgs();
+
+        ((java.util.HashMap) field[0]).forEach((k, v) -> {
+            routingDataSource.closeDataSource(((String) k).toLowerCase());
+        });
     }
 }

@@ -30,9 +30,6 @@ public class DataSourceContext {
     }
 
     public void removeContext() {
-        if (context.get() != null) {
-            routingDataSource.closeDataSource(context.get());
-        }
         context.remove();
     }
 

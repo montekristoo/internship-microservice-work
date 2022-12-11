@@ -1,6 +1,7 @@
 package com.internship.microservice.routing;
 
 import com.atomikos.jdbc.AtomikosDataSourceBean;
+import com.zaxxer.hikari.HikariDataSource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
@@ -18,7 +19,7 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
     @Override
     public Object determineCurrentLookupKey() {
         if (DataSourceContext.getCurrentContext() == null) {
-            return null;
+            return "main_db";
         }
 
         return DataSourceContext.getCurrentContext();
@@ -51,9 +52,10 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
 
     @SneakyThrows
     public void closeDataSource(String name) {
-        DataSource dataSource = determineTargetDataSource();
-        AtomikosDataSourceBean atomikosDataSourceBean = dataSource.unwrap(AtomikosDataSourceBean.class);
-        atomikosDataSourceBean.close();
         sources.remove(name);
+        System.out.println(getResolvedDataSources());
+        Map<Object, Object> dataSourcesToObjects = new HashMap<>(sources);
+        setTargetDataSources(dataSourcesToObjects);
+        afterPropertiesSet();
     }
 }
