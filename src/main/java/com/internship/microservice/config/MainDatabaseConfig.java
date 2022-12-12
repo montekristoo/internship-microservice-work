@@ -6,6 +6,7 @@ import com.atomikos.jdbc.AtomikosDataSourceBean;
 import com.internship.microservice.routing.RoutingDataSource;
 import lombok.SneakyThrows;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -45,7 +46,7 @@ public class MainDatabaseConfig {
         p.setProperty("user", username);
         p.setProperty("password", password);
         p.setProperty("serverName", "localhost");
-        p.setProperty("portNumber", "3002");
+        p.setProperty("portNumber", "5432");
         p.setProperty("databaseName", "main_db");
         ds.setXaProperties(p);
         ds.setPoolSize(5);
@@ -58,11 +59,6 @@ public class MainDatabaseConfig {
       UserTransactionManager userTransactionManager = new UserTransactionManager();
       userTransactionManager.setForceShutdown(false);
       return userTransactionManager;
-    }
-
-    @Bean
-    public J2eeUserTransaction j2eeUserTransaction() {
-        return new J2eeUserTransaction();
     }
 
     @Bean
@@ -81,6 +77,7 @@ public class MainDatabaseConfig {
     public SqlSessionFactoryBean sessionFactoryBean() {
         SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
         sessionFactoryBean.setDataSource(abstractRoutingDataSource());
+        sessionFactoryBean.setTransactionFactory(new ManagedTransactionFactory());
         return sessionFactoryBean;
     }
 

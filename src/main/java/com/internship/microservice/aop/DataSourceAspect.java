@@ -25,7 +25,8 @@ public class DataSourceAspect {
     @Autowired
     private RoutingDataSource routingDataSource;
 
-    @Pointcut("execution(* com.internship.microservice.service.user.UserServiceImpl.connect(String, java.util.List))")
+    @Pointcut("execution(* com.internship.microservice.service.routing.RoutingServiceImpl.connect(String, java.util" +
+            ".List))")
     public void contextPointcut() {
     }
 
@@ -46,12 +47,11 @@ public class DataSourceAspect {
         dataSourceContext.removeContext();
     }
 
-//    @After("closeCon()")
-//    public void after(JoinPoint joinPoint) {
-//        Object[] field = joinPoint.getArgs();
-//
-//        ((java.util.HashMap) field[0]).forEach((k, v) -> {
-//            routingDataSource.closeDataSource(((String) k).toLowerCase());
-//        });
-//    }
+    @After("closeCon()")
+    public void after(JoinPoint joinPoint) {
+        Object[] field = joinPoint.getArgs();
+        ((java.util.Map) field[0]).forEach((k, v) -> {
+            routingDataSource.closeDataSource(((String) k).toLowerCase());
+        });
+    }
 }

@@ -21,7 +21,6 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
         if (DataSourceContext.getCurrentContext() == null) {
             return "main_db";
         }
-
         return DataSourceContext.getCurrentContext();
     }
 
@@ -52,6 +51,9 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
 
     @SneakyThrows
     public void closeDataSource(String name) {
+        DataSource dataSource = sources.get(name);
+        AtomikosDataSourceBean atomikosDataSourceBean = dataSource.unwrap(AtomikosDataSourceBean.class);
+        atomikosDataSourceBean.close();
         sources.remove(name);
         Map<Object, Object> dataSourcesToObjects = new HashMap<>(sources);
         setTargetDataSources(dataSourcesToObjects);
