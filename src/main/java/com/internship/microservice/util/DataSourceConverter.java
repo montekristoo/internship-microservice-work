@@ -27,7 +27,7 @@ public class DataSourceConverter {
         p.setProperty("user", dataSrcEntity.getUsername());
         p.setProperty("password", clientPasswords.get(dataSrcEntity.getName()));
         p.setProperty("serverName", "localhost");
-        p.setProperty("portNumber", "5432");
+        p.setProperty("portNumber", "3002");
         p.setProperty("databaseName", dataSrcEntity.getName());
         ds.setXaProperties(p);
         ds.setPoolSize(10);

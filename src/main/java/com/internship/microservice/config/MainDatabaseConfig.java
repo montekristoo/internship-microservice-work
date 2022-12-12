@@ -1,14 +1,16 @@
 package com.internship.microservice.config;
 
+import com.atomikos.icatch.jta.J2eeUserTransaction;
 import com.atomikos.icatch.jta.UserTransactionManager;
 import com.atomikos.jdbc.AtomikosDataSourceBean;
 import com.internship.microservice.routing.RoutingDataSource;
 import lombok.SneakyThrows;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.jta.JtaTransactionManager;
 
 import javax.sql.DataSource;
@@ -43,7 +45,7 @@ public class MainDatabaseConfig {
         p.setProperty("user", username);
         p.setProperty("password", password);
         p.setProperty("serverName", "localhost");
-        p.setProperty("portNumber", "5432");
+        p.setProperty("portNumber", "3002");
         p.setProperty("databaseName", "main_db");
         ds.setXaProperties(p);
         ds.setPoolSize(5);
@@ -59,8 +61,27 @@ public class MainDatabaseConfig {
     }
 
     @Bean
-    public PlatformTransactionManager jtaTransactionManager() {
+    public J2eeUserTransaction j2eeUserTransaction() {
+        return new J2eeUserTransaction();
+    }
+
+    @Bean
+    public JtaTransactionManager jtaTransactionManager() {
         return new JtaTransactionManager(userTransaction(), userTransaction());
+    }
+
+//    @Bean
+//    public SqlSessionFactory sqlSessionFactory() throws Exception {
+//        SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
+//        sessionFactoryBean.setDataSource(abstractRoutingDataSource());
+//        return sessionFactoryBean.getObject();
+//    }
+
+    @Bean
+    public SqlSessionFactoryBean sessionFactoryBean() {
+        SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
+        sessionFactoryBean.setDataSource(abstractRoutingDataSource());
+        return sessionFactoryBean;
     }
 
 }

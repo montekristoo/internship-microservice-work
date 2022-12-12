@@ -4,18 +4,12 @@ import com.internship.microservice.entity.DataSourceEntity;
 import com.internship.microservice.exception.DatabaseAlreadyExists;
 import com.internship.microservice.exception.DatabaseNotFoundException;
 import com.internship.microservice.mapper.DataSourceMapper;
-import com.internship.microservice.routing.RoutingDataSource;
 import com.internship.microservice.util.PasswordUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.util.Base64Utils;
 
 import java.util.List;
@@ -26,12 +20,6 @@ import java.util.List;
 public class DataSourceServiceImpl implements DataSourceService {
     @Autowired
     private DataSourceMapper dbMapper;
-    @Autowired
-    private RoutingDataSource routingDataSource;
-    @Autowired
-    PlatformTransactionManager platformTransactionManager;
-    @Autowired
-    private SqlSessionFactory sqlSessionFactory;
 
     @Override
     public void addDataSource(DataSourceEntity dataSrc) {

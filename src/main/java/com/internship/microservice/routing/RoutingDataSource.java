@@ -53,7 +53,6 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
     @SneakyThrows
     public void closeDataSource(String name) {
         sources.remove(name);
-        System.out.println(getResolvedDataSources());
         Map<Object, Object> dataSourcesToObjects = new HashMap<>(sources);
         setTargetDataSources(dataSourcesToObjects);
         afterPropertiesSet();

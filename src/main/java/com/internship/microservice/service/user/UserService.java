@@ -8,4 +8,6 @@ import java.util.Map;
 public interface UserService {
     void addUsers(List<UserEntity> users);
     void sendToTransactionContainer(Map<String, List<UserEntity>> map);
+    void addUser(UserEntity user);
+    void connect(String name, List<UserEntity> users);
 }
