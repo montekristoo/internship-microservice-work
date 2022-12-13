@@ -4,7 +4,6 @@ import com.internship.microservice.entity.DataSourceEntity;
 import com.internship.microservice.service.datasource.DataSourceService;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -34,7 +33,7 @@ public class DataSourceController {
     }
 
     @GetMapping("databases/{name}")
-    public DataSourceEntity findByName(@PathVariable("name") String name) throws SQLException {
+    public DataSourceEntity findByName(@PathVariable("name") String name) {
         return dataSourceService.findByName(name);
     }
 

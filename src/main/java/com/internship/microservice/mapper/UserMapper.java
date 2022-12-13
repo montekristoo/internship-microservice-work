@@ -1,9 +1,7 @@
 package com.internship.microservice.mapper;
 
 import com.internship.microservice.entity.UserEntity;
-import org.apache.ibatis.annotations.Flush;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.executor.BatchResult;
 
 import java.util.List;
@@ -15,4 +13,8 @@ public interface UserMapper {
     void addUser(UserEntity user);
     @Flush
     List<BatchResult> flush();
+    @Select("SELECT * FROM users")
+    List<UserEntity> findAll();
+    @Delete("TRUNCATE TABLE users")
+    void truncateUsers();
 }

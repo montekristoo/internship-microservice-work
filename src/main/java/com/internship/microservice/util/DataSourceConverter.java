@@ -16,7 +16,7 @@ public class DataSourceConverter {
     private Map<String, String> clientPasswords;
     private static final String POSTGRES_CLASS_NAME = "org.postgresql.xa.PGXADataSource";
     private static final String HOST_SERVER = "localhost";
-    private static final String PORT_NUMBER = "3002";
+    private static final String PORT_NUMBER = "5432";
 
     public DataSource entityToDataSource(DataSourceEntity dataSrcEntity) {
         if (checkPassword(dataSrcEntity)) {
@@ -31,7 +31,9 @@ public class DataSourceConverter {
             p.setProperty("databaseName", dataSrcEntity.getName());
             ds.setXaProperties(p);
             ds.setPoolSize(10);
+
             return ds;
+
         } else {
             throw new WrongDatabaseCredentialsException(dataSrcEntity.getName());
         }
@@ -40,9 +42,12 @@ public class DataSourceConverter {
 
     private boolean checkPassword(DataSourceEntity dataSource) {
         if (dataSource.getName().equals("main_db")) {
+
             return true;
         }
+
         String falsePasswordClient = clientPasswords.get(dataSource.getName());
+
         return PasswordUtils.verifyPassword(dataSource.getPassword(), dataSource.getSalt(), falsePasswordClient);
     }
 }

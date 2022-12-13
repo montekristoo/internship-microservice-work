@@ -9,7 +9,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +28,7 @@ public class DataSourceAspect {
     public void contextPointcut() {
     }
 
-    @Pointcut("execution(* com.internship.microservice.service.user.UserServiceImpl.sendToTransactionContainer(java" +
+    @Pointcut("execution(* com.internship.microservice.service.user.UserServiceImpl.insertUsersInGlobalTransaction(java" +
             ".util.Map))")
     public void closeCon() {
     }
@@ -42,7 +41,7 @@ public class DataSourceAspect {
     }
 
     @After("contextPointcut()")
-    public void afterContext(JoinPoint joinPoint) {
+    public void afterContext() {
         dataSourceContext.removeContext();
     }
 

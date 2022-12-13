@@ -7,5 +7,7 @@ import java.util.Map;
 
 public interface UserService {
     void addUsers(List<UserEntity> users);
-    void sendToTransactionContainer(Map<String, List<UserEntity>> map);
+    void insertUsersInGlobalTransaction(Map<String, List<UserEntity>> map);
+    List<UserEntity> findAll();
+    void truncateUsers();
 }

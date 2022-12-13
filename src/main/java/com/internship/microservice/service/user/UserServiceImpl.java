@@ -22,16 +22,10 @@ public class UserServiceImpl implements UserService {
     private RoutingService routingService;
     @Autowired
     private UserTransaction userTransaction;
+    @Autowired
+    private UserMapper userMapper;
     private static final List<UserEntity> dbUsers = new ArrayList<>();
     private static int BATCH_SIZE = 20;
-
-    public static void setBatchSize(int size) {
-        BATCH_SIZE = size;
-    }
-
-    public static int getBatchSize() {
-        return BATCH_SIZE;
-    }
 
     @Override
     public void addUsers(List<UserEntity> users) {
@@ -40,7 +34,7 @@ public class UserServiceImpl implements UserService {
             if (dbUsers.size() == BATCH_SIZE) {
                 Map<String, List<UserEntity>> usersByCountry = dbUsers.stream()
                         .collect(Collectors.groupingBy(UserEntity::getNationality));
-                ((UserService) AopContext.currentProxy()).sendToTransactionContainer(usersByCountry);
+                ((UserService) AopContext.currentProxy()).insertUsersInGlobalTransaction(usersByCountry);
                 usersByCountry.clear();
                 dbUsers.clear();
             }
@@ -48,9 +42,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @SneakyThrows
-    public void sendToTransactionContainer(Map<String, List<UserEntity>> dbUsersToSend) {
+    public void insertUsersInGlobalTransaction(Map<String, List<UserEntity>> dbUsersToSend) {
         userTransaction.begin();
-        System.out.println("BEGIN");
         try {
             dbUsersToSend.keySet()
                     .forEach((dbToConnect) -> {
@@ -61,5 +54,15 @@ public class UserServiceImpl implements UserService {
         catch (Exception e) {
             userTransaction.rollback();
         }
+    }
+
+    @Override
+    public List<UserEntity> findAll() {
+        return userMapper.findAll();
+    }
+
+    @Override
+    public void truncateUsers() {
+        userMapper.truncateUsers();
     }
 }

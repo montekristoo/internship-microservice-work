@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.jta.JtaTransactionManager;
 
 import javax.sql.DataSource;
+import java.util.Objects;
 
 
 @Configuration
@@ -77,7 +78,7 @@ public class MainDatabaseConfig {
 
     @Bean
     public SqlSessionTemplate batchSqlSessionTemplate() throws Exception {
-        return new SqlSessionTemplate(sessionFactoryBean().getObject(), ExecutorType.BATCH);
+        return new SqlSessionTemplate(Objects.requireNonNull(sessionFactoryBean().getObject()), ExecutorType.BATCH);
     }
 
 }

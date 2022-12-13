@@ -22,6 +22,7 @@ public class UserEntity {
     private String lastName;
     @NotNull
     @NotBlank
+    @Size(min = 1, max = 1)
     private String genre;
     @NotNull
     private Date dateOfBirth;

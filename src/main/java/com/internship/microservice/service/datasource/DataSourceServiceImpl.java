@@ -60,6 +60,7 @@ public class DataSourceServiceImpl implements DataSourceService {
         if (dataSrc == null) {
             throw new DatabaseNotFoundException(name);
         }
+
         return dataSrc;
     }
 

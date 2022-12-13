@@ -1,7 +1,6 @@
 package com.internship.microservice.routing;
 
 import com.atomikos.jdbc.AtomikosDataSourceBean;
-import com.zaxxer.hikari.HikariDataSource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
@@ -25,6 +24,9 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
     }
 
     public void addDataSource(String name, DataSource source) {
+        if (sources.get(name) != null) {
+            return;
+        }
         log.info("Name entry: " + name);
         sources.put(name, source);
         System.out.println(sources);
