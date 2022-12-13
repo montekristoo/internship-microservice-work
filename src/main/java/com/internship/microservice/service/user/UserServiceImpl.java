@@ -19,13 +19,19 @@ import java.util.stream.Collectors;
 @EnableAspectJAutoProxy(exposeProxy = true)
 public class UserServiceImpl implements UserService {
     @Autowired
-    private UserMapper userMapper;
-    @Autowired
     private RoutingService routingService;
     @Autowired
     private UserTransaction userTransaction;
     private static final List<UserEntity> dbUsers = new ArrayList<>();
-    private static final int BATCH_SIZE = 20;
+    private static int BATCH_SIZE = 20;
+
+    public static void setBatchSize(int size) {
+        BATCH_SIZE = size;
+    }
+
+    public static int getBatchSize() {
+        return BATCH_SIZE;
+    }
 
     @Override
     public void addUsers(List<UserEntity> users) {
@@ -44,6 +50,7 @@ public class UserServiceImpl implements UserService {
     @SneakyThrows
     public void sendToTransactionContainer(Map<String, List<UserEntity>> dbUsersToSend) {
         userTransaction.begin();
+        System.out.println("BEGIN");
         try {
             dbUsersToSend.keySet()
                     .forEach((dbToConnect) -> {
@@ -52,7 +59,6 @@ public class UserServiceImpl implements UserService {
             userTransaction.commit();
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
             userTransaction.rollback();
         }
     }

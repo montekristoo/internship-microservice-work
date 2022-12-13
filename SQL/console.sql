@@ -170,8 +170,10 @@ SHOW config_file;
 ALTER system SET max_prepared_transactions = 100;
 
 
-ALTER SYSTEM SET log_statement = 'all'
+ALTER SYSTEM SET log_statement = 'all';
 SELECT set_config('log_destination', 'stderr', true);
+
+SHOW data_directory;
 
 
 

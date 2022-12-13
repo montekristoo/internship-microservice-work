@@ -14,23 +14,35 @@ import java.util.Properties;
 public class DataSourceConverter {
     @Autowired
     private Map<String, String> clientPasswords;
+    private static final String POSTGRES_CLASS_NAME = "org.postgresql.xa.PGXADataSource";
+    private static final String HOST_SERVER = "localhost";
+    private static final String PORT_NUMBER = "3002";
 
     public DataSource entityToDataSource(DataSourceEntity dataSrcEntity) {
-        String falsePasswordClient = clientPasswords.get(dataSrcEntity.getName());
-        if (!PasswordUtils.verifyPassword(dataSrcEntity.getPassword(), dataSrcEntity.getSalt(), falsePasswordClient)) {
+        if (checkPassword(dataSrcEntity)) {
+            AtomikosDataSourceBean ds = new AtomikosDataSourceBean();
+            ds.setUniqueResourceName(dataSrcEntity.getName());
+            ds.setXaDataSourceClassName(POSTGRES_CLASS_NAME);
+            Properties p = new Properties();
+            p.setProperty("user", dataSrcEntity.getUsername());
+            p.setProperty("password", dataSrcEntity.getName().equals("main_db") ? dataSrcEntity.getPassword() : clientPasswords.get(dataSrcEntity.getName()));
+            p.setProperty("serverName", HOST_SERVER);
+            p.setProperty("portNumber", PORT_NUMBER);
+            p.setProperty("databaseName", dataSrcEntity.getName());
+            ds.setXaProperties(p);
+            ds.setPoolSize(10);
+            return ds;
+        } else {
             throw new WrongDatabaseCredentialsException(dataSrcEntity.getName());
         }
-        AtomikosDataSourceBean ds = new AtomikosDataSourceBean();
-        ds.setUniqueResourceName(dataSrcEntity.getName());
-        ds.setXaDataSourceClassName("org.postgresql.xa.PGXADataSource");
-        Properties p = new Properties();
-        p.setProperty("user", dataSrcEntity.getUsername());
-        p.setProperty("password", clientPasswords.get(dataSrcEntity.getName()));
-        p.setProperty("serverName", "localhost");
-        p.setProperty("portNumber", "5432");
-        p.setProperty("databaseName", dataSrcEntity.getName());
-        ds.setXaProperties(p);
-        ds.setPoolSize(10);
-        return ds;
+    }
+
+
+    private boolean checkPassword(DataSourceEntity dataSource) {
+        if (dataSource.getName().equals("main_db")) {
+            return true;
+        }
+        String falsePasswordClient = clientPasswords.get(dataSource.getName());
+        return PasswordUtils.verifyPassword(dataSource.getPassword(), dataSource.getSalt(), falsePasswordClient);
     }
 }

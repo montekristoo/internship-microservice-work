@@ -1,13 +1,15 @@
 package com.internship.microservice.config;
 
-import com.atomikos.icatch.jta.J2eeUserTransaction;
 import com.atomikos.icatch.jta.UserTransactionManager;
-import com.atomikos.jdbc.AtomikosDataSourceBean;
+import com.internship.microservice.entity.DataSourceEntity;
 import com.internship.microservice.routing.RoutingDataSource;
+import com.internship.microservice.util.DataSourceConverter;
 import lombok.SneakyThrows;
-import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +17,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.jta.JtaTransactionManager;
 
 import javax.sql.DataSource;
-import java.util.Properties;
 
 
 @Configuration
@@ -27,7 +28,11 @@ public class MainDatabaseConfig {
     private String password;
     @Value("${spring.datasource.url}")
     private String jdbcUrl;
+    @Value("${spring.datasource.driver-class-name}")
+    private String driverClassName;
     private final static String DEFAULT = "main_db";
+    @Autowired
+    private DataSourceConverter dsConverter;
 
     @Bean
     @Primary
@@ -39,18 +44,14 @@ public class MainDatabaseConfig {
     }
 
     public DataSource defaultDataSource() {
-        AtomikosDataSourceBean ds = new AtomikosDataSourceBean();
-        ds.setUniqueResourceName("default");
-        ds.setXaDataSourceClassName("org.postgresql.xa.PGXADataSource");
-        Properties p = new Properties();
-        p.setProperty("user", username);
-        p.setProperty("password", password);
-        p.setProperty("serverName", "localhost");
-        p.setProperty("portNumber", "5432");
-        p.setProperty("databaseName", "main_db");
-        ds.setXaProperties(p);
-        ds.setPoolSize(5);
-        return ds;
+        DataSourceEntity dataSourceEntity = DataSourceEntity.builder()
+                .name(DEFAULT)
+                .username(username)
+                .password(password)
+                .jdbcUrl(jdbcUrl)
+                .driverClassName(driverClassName)
+                .build();
+        return dsConverter.entityToDataSource(dataSourceEntity);
     }
 
     @SneakyThrows
@@ -66,19 +67,17 @@ public class MainDatabaseConfig {
         return new JtaTransactionManager(userTransaction(), userTransaction());
     }
 
-//    @Bean
-//    public SqlSessionFactory sqlSessionFactory() throws Exception {
-//        SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
-//        sessionFactoryBean.setDataSource(abstractRoutingDataSource());
-//        return sessionFactoryBean.getObject();
-//    }
-
     @Bean
     public SqlSessionFactoryBean sessionFactoryBean() {
         SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
         sessionFactoryBean.setDataSource(abstractRoutingDataSource());
         sessionFactoryBean.setTransactionFactory(new ManagedTransactionFactory());
         return sessionFactoryBean;
+    }
+
+    @Bean
+    public SqlSessionTemplate batchSqlSessionTemplate() throws Exception {
+        return new SqlSessionTemplate(sessionFactoryBean().getObject(), ExecutorType.BATCH);
     }
 
 }
