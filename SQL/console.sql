@@ -69,7 +69,7 @@ FROM current_database();
 
 TRUNCATE test_table;
 
-SELECT COUNT(*)
+SELECT *
 FROM pg_stat_activity;
 
 ALTER TABLE databases
@@ -161,10 +161,6 @@ END WORK;
 END WORK;
 
 SELECT * FROM pg_prepared_xacts;
-
-BEGIN TRANSACTION;
-CREATE TABLE test(id int);
-PREPARE TRANSACTION 'foo';
 
 SHOW config_file;
 ALTER system SET max_prepared_transactions = 100;

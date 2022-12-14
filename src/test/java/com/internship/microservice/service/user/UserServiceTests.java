@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.validation.ConstraintDefinitionException;
 import javax.validation.ConstraintViolationException;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -24,6 +23,27 @@ public class UserServiceTests {
     private UserService userService;
     @Autowired
     private UserController userController;
+    private static final UserEntity[] MOCK_USERS = {
+            UserEntity.builder()
+                    .firstName("Mock")
+                    .lastName("User")
+                    .genre("F")
+                    .dateOfBirth(Date.valueOf(("2020-03-01")))
+                    .nationality("MD")
+                    .username("mockuu")
+                    .password("password")
+                    .build(),
+            UserEntity.builder()
+                    .firstName("Mock")
+                    .lastName("User")
+                    .genre("F")
+                    .dateOfBirth(Date.valueOf(("2020-03-01")))
+                    .nationality("UK")
+                    .username("mockuu")
+                    .password("password")
+                    .build()
+
+    };
 
     @BeforeEach
     public void reset() {
@@ -40,29 +60,11 @@ public class UserServiceTests {
     public void givenUsersWithDifferentNationality_thenAddThemInGlobalTransactionInSpecificDb() {
         List<UserEntity> usersFromMd = new ArrayList<>();
         List<UserEntity> usersFromUk = new ArrayList<>();
-        UserEntity userMD = UserEntity.builder()
-                .firstName("Mock")
-                .lastName("User")
-                .genre("F")
-                .dateOfBirth(Date.valueOf(("2020-03-01")))
-                .nationality("MD")
-                .username("mockuu")
-                .password("password")
-                .build();
         for (int i = 0; i < 10; i++) {
-            usersFromMd.add(userMD);
+            usersFromMd.add(MOCK_USERS[0]);
         }
-        UserEntity userUK = UserEntity.builder()
-                .firstName("Mock")
-                .lastName("User")
-                .genre("F")
-                .dateOfBirth(Date.valueOf(("2020-03-01")))
-                .nationality("UK")
-                .username("mockuu")
-                .password("password")
-                .build();
         for (int i = 0; i < 10; i++) {
-            usersFromUk.add(userUK);
+            usersFromUk.add(MOCK_USERS[1]);
         }
         userService.addUsers(usersFromMd);
         userService.addUsers(usersFromUk);
@@ -79,29 +81,11 @@ public class UserServiceTests {
     public void givenUsersWithDifferentNationality_thenRollbackGlobalTransactionOnError() {
         List<UserEntity> usersFromMd = new ArrayList<>();
         List<UserEntity> usersFromUk = new ArrayList<>();
-        UserEntity userMD = UserEntity.builder()
-                .firstName("Mock")
-                .lastName("User")
-                .genre("F")
-                .dateOfBirth(Date.valueOf(("2020-03-01")))
-                .nationality("MD")
-                .username("mockuu")
-                .password("password")
-                .build();
         for (int i = 0; i < 10; i++) {
-            usersFromMd.add(userMD);
+            usersFromMd.add(MOCK_USERS[0]);
         }
-        UserEntity userUK = UserEntity.builder()
-                .firstName("Mock")
-                .lastName("User")
-                .genre("F")
-                .dateOfBirth(Date.valueOf(("2020-03-01")))
-                .nationality("UK")
-                .username("mockuu")
-                .password("password")
-                .build();
         for (int i = 0; i < 10; i++) {
-            usersFromUk.add(userUK);
+            usersFromUk.add(MOCK_USERS[1]);
         }
         // action that causes the error and rollback global transaction
         usersFromUk.get(0).setGenre("FFFFF");
@@ -119,17 +103,8 @@ public class UserServiceTests {
     @Test
     public void givenListWithUsersWithConstraintValidationError_thenThrowException() {
         List<UserEntity> users = new ArrayList<>();
-        UserEntity user = UserEntity.builder()
-                .firstName("Mock")
-                .lastName("User")
-                .genre("F")
-                .dateOfBirth(Date.valueOf(("2020-03-01")))
-                .nationality("MD")
-                .username("mockuu")
-                .password("password")
-                .build();
         for (int i = 0; i < 10; i++) {
-            users.add(user);
+            users.add(MOCK_USERS[0]);
         }
         users.get(4).setGenre("Long genre name");
         Assertions.assertThrows(ConstraintViolationException.class, () -> userController.addUsers(users));

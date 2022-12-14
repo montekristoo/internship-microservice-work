@@ -2,6 +2,7 @@ package com.internship.microservice.controller;
 
 import com.internship.microservice.entity.UserEntity;
 import com.internship.microservice.service.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,11 +17,8 @@ import java.util.List;
 @Validated
 public class UserController {
 
-    private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    @Autowired
+    private UserService userService;
 
     @PostMapping
     public void addUsers(@RequestBody List<@Valid UserEntity> users) {

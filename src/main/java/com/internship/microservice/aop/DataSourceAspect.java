@@ -25,31 +25,30 @@ public class DataSourceAspect {
 
     @Pointcut("execution(* com.internship.microservice.service.routing.RoutingServiceImpl.connect(String, java.util" +
             ".List))")
-    public void contextPointcut() {
+    public void connectPointcut() {
     }
 
     @Pointcut("execution(* com.internship.microservice.service.user.UserServiceImpl.insertUsersInGlobalTransaction(java" +
             ".util.Map))")
-    public void closeCon() {
+    public void closeAtomikosPoolsFromGlobalTransaction() {
     }
 
-    @Before("contextPointcut()")
-    public void before(JoinPoint joinPoint) {
+    @Before("connectPointcut()")
+    public void beforeConnect(JoinPoint joinPoint) {
         Object[] field = joinPoint.getArgs();
         dataSourceContext.setContext((String) field[0]);
         log.info(DataSourceContext.getCurrentContext());
     }
 
-    @After("contextPointcut()")
-    public void afterContext() {
+    @After("connectPointcut()")
+    public void afterConnect() {
         dataSourceContext.removeContext();
     }
 
-    @After("closeCon()")
-    public void after(JoinPoint joinPoint) {
+    @After("closeAtomikosPoolsFromGlobalTransaction()")
+    public void afterGlobalTransaction(JoinPoint joinPoint) {
         Object[] field = joinPoint.getArgs();
-        ((java.util.Map) field[0]).forEach((k, v) -> {
-            routingDataSource.closeDataSource(((String) k).toLowerCase());
-        });
+        ((java.util.Map) field[0]).forEach((k, v) ->
+                routingDataSource.closeDataSource(((String) k).toLowerCase()));
     }
 }

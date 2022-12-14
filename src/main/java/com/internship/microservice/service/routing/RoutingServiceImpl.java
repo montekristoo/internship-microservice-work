@@ -1,6 +1,7 @@
 package com.internship.microservice.service.routing;
 
 import com.internship.microservice.entity.UserEntity;
+import com.internship.microservice.exception.GlobalTransactionException;
 import com.internship.microservice.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.ExecutorType;
@@ -22,6 +23,9 @@ public class RoutingServiceImpl implements RoutingService {
         SqlSession session = sqlSessionFactory.openSession(ExecutorType.BATCH);
         UserMapper mapper = session.getMapper(UserMapper.class);
         for (UserEntity user : users) {
+            if (name.equals("md") && user.getFirstName().equals("Syman")) {
+                throw new GlobalTransactionException("Transaction failed");
+            }
             mapper.addUser(user);
         }
         session.flushStatements();

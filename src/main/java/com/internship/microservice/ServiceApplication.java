@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@EnableTransactionManagement(order = 1)
+@EnableTransactionManagement
 @MapperScan(basePackages = "com.internship.microservice.mapper")
 public class ServiceApplication {
     public static void main(String[] args) {

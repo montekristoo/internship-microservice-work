@@ -1,6 +1,7 @@
 package com.internship.microservice.service.user;
 
 import com.internship.microservice.entity.UserEntity;
+import com.internship.microservice.exception.GlobalTransactionException;
 import com.internship.microservice.mapper.UserMapper;
 import com.internship.microservice.service.routing.RoutingService;
 import lombok.SneakyThrows;
@@ -25,7 +26,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
     private static final List<UserEntity> dbUsers = new ArrayList<>();
-    private static int BATCH_SIZE = 20;
+    private static final int BATCH_SIZE = 20;
 
     @Override
     public void addUsers(List<UserEntity> users) {
@@ -45,14 +46,13 @@ public class UserServiceImpl implements UserService {
     public void insertUsersInGlobalTransaction(Map<String, List<UserEntity>> dbUsersToSend) {
         userTransaction.begin();
         try {
-            dbUsersToSend.keySet()
-                    .forEach((dbToConnect) -> {
-                        this.routingService.connect(dbToConnect.toLowerCase(), dbUsersToSend.get(dbToConnect));
-                    });
+            dbUsersToSend.forEach((dbToConnect, users) ->
+                routingService.connect(dbToConnect.toLowerCase(), users)
+            );
             userTransaction.commit();
-        }
-        catch (Exception e) {
+        } catch (GlobalTransactionException e) {
             userTransaction.rollback();
+            throw new GlobalTransactionException(e.getMessage());
         }
     }
 
