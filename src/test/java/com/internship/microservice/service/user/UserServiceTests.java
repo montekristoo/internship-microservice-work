@@ -30,7 +30,7 @@ public class UserServiceTests {
                     .genre("F")
                     .dateOfBirth(Date.valueOf(("2020-03-01")))
                     .nationality("MD")
-                    .username("mockuu")
+                    .username("mock_user")
                     .password("password")
                     .build(),
             UserEntity.builder()
@@ -39,7 +39,7 @@ public class UserServiceTests {
                     .genre("F")
                     .dateOfBirth(Date.valueOf(("2020-03-01")))
                     .nationality("UK")
-                    .username("mockuu")
+                    .username("mock_user")
                     .password("password")
                     .build()
 
@@ -88,7 +88,7 @@ public class UserServiceTests {
             usersFromUk.add(MOCK_USERS[1]);
         }
         // action that causes the error and rollback global transaction
-        usersFromUk.get(0).setGenre("FFFFF");
+        usersFromUk.get(0).setGenre("female");
         //
         userService.addUsers(usersFromMd);
         userService.addUsers(usersFromUk);

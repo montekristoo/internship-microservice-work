@@ -5,7 +5,6 @@ import com.internship.microservice.exception.GlobalTransactionException;
 import com.internship.microservice.mapper.UserMapper;
 import com.internship.microservice.service.routing.RoutingService;
 import lombok.SneakyThrows;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Service;
@@ -19,27 +18,33 @@ import java.util.stream.Collectors;
 @Service
 @EnableAspectJAutoProxy(exposeProxy = true)
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private RoutingService routingService;
-    @Autowired
-    private UserTransaction userTransaction;
-    @Autowired
-    private UserMapper userMapper;
+    private final RoutingService routingService;
+    private final UserTransaction userTransaction;
+    private final UserMapper userMapper;
     private static final List<UserEntity> dbUsers = new ArrayList<>();
     private static final int BATCH_SIZE = 20;
+
+    @Autowired
+    public UserServiceImpl(RoutingService routingService, UserTransaction userTransaction, UserMapper userMapper) {
+        this.routingService = routingService;
+        this.userTransaction = userTransaction;
+        this.userMapper = userMapper;
+    }
 
     @Override
     public void addUsers(List<UserEntity> users) {
         users.forEach((user) -> {
             dbUsers.add(user);
             if (dbUsers.size() == BATCH_SIZE) {
-                Map<String, List<UserEntity>> usersByCountry = dbUsers.stream()
-                        .collect(Collectors.groupingBy(UserEntity::getNationality));
-                ((UserService) AopContext.currentProxy()).insertUsersInGlobalTransaction(usersByCountry);
-                usersByCountry.clear();
+                insertUsersInGlobalTransaction(prepareUsers());
                 dbUsers.clear();
             }
         });
+    }
+
+    private Map<String, List<UserEntity>> prepareUsers() {
+        return dbUsers.stream()
+                .collect(Collectors.groupingBy(UserEntity::getNationality));
     }
 
     @SneakyThrows
@@ -47,7 +52,7 @@ public class UserServiceImpl implements UserService {
         userTransaction.begin();
         try {
             dbUsersToSend.forEach((dbToConnect, users) ->
-                routingService.connect(dbToConnect.toLowerCase(), users)
+                    routingService.connect(dbToConnect.toLowerCase(), users)
             );
             userTransaction.commit();
         } catch (GlobalTransactionException e) {

@@ -18,20 +18,28 @@ import java.util.List;
 @Service
 @EnableScheduling
 public class DataSourceServiceImpl implements DataSourceService {
+    private final DataSourceMapper dbMapper;
+
     @Autowired
-    private DataSourceMapper dbMapper;
+    public DataSourceServiceImpl(DataSourceMapper dbMapper) {
+        this.dbMapper = dbMapper;
+    }
 
     @Override
     public void addDataSource(DataSourceEntity dataSrc) {
         if (dbMapper.findByName(dataSrc.getName()) != null) {
             throw new DatabaseAlreadyExists(dataSrc.getName());
         }
+        dbMapper.addDatabase(configurePassword(dataSrc));
+    }
+
+    private DataSourceEntity configurePassword(DataSourceEntity dataSrc) {
         PasswordUtils.writeToFile(dataSrc.getName(), dataSrc.getPassword());
         byte[] salt = PasswordUtils.generateSalt();
         String password = PasswordUtils.generateHashingPassword(dataSrc.getPassword(), salt);
         dataSrc.setSalt(Base64Utils.encodeToString(salt));
         dataSrc.setPassword(password);
-        dbMapper.addDatabase(dataSrc);
+        return dataSrc;
     }
 
     @Override

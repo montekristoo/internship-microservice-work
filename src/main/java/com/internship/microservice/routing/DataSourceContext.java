@@ -13,13 +13,17 @@ import javax.sql.DataSource;
 @Component
 @Slf4j
 public class DataSourceContext {
-    @Autowired
-    private RoutingDataSource routingDataSource;
-    @Autowired
-    private DataSourceService mainDbService;
-    @Autowired
-    private DataSourceConverter dsConverter;
+    private final RoutingDataSource routingDataSource;
+    private final DataSourceService mainDbService;
+    private final DataSourceConverter dsConverter;
     private final static ThreadLocal<String> context = new ThreadLocal<>();
+
+    @Autowired
+    public DataSourceContext(RoutingDataSource routingDataSource, DataSourceService mainDbService, DataSourceConverter dsConverter) {
+        this.routingDataSource = routingDataSource;
+        this.mainDbService = mainDbService;
+        this.dsConverter = dsConverter;
+    }
 
 
     public void setContext(String targetDataSource) {

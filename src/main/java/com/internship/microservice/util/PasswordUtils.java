@@ -45,7 +45,6 @@ public class PasswordUtils {
     public static boolean verifyPassword(String passwordFromDb, String hashFromDb, String clientPassword) {
         byte[] salt = Base64.getDecoder().decode(hashFromDb);
         String passwordToVerify = generateHashingPassword(clientPassword, salt);
-
         return passwordFromDb.equals(passwordToVerify);
     }
 

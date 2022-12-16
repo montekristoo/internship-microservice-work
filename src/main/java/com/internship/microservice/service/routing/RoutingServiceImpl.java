@@ -1,7 +1,6 @@
 package com.internship.microservice.service.routing;
 
 import com.internship.microservice.entity.UserEntity;
-import com.internship.microservice.exception.GlobalTransactionException;
 import com.internship.microservice.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.ExecutorType;
@@ -15,20 +14,24 @@ import java.util.List;
 @Slf4j
 @Service
 public class RoutingServiceImpl implements RoutingService {
+    private final SqlSessionFactory sqlSessionFactory;
+
     @Autowired
-    private SqlSessionFactory sqlSessionFactory;
+    public RoutingServiceImpl(SqlSessionFactory sqlSessionFactory) {
+        this.sqlSessionFactory = sqlSessionFactory;
+    }
 
     @Override
     public void connect(String name, List<UserEntity> users) {
-        SqlSession session = sqlSessionFactory.openSession(ExecutorType.BATCH);
-        UserMapper mapper = session.getMapper(UserMapper.class);
-        for (UserEntity user : users) {
-            if (name.equals("md") && user.getFirstName().equals("Syman")) {
-                throw new GlobalTransactionException("Transaction failed");
+        try (SqlSession session = sqlSessionFactory.openSession(ExecutorType.BATCH); session) {
+            UserMapper mapper = session.getMapper(UserMapper.class);
+            for (UserEntity user : users) {
+                mapper.addUser(user);
             }
-            mapper.addUser(user);
+            session.flushStatements();
         }
-        session.flushStatements();
-        session.close();
+        catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

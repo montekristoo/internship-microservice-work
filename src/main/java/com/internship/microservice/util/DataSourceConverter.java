@@ -12,11 +12,15 @@ import java.util.Properties;
 
 @Component
 public class DataSourceConverter {
-    @Autowired
-    private Map<String, String> clientPasswords;
+    private final Map<String, String> clientPasswords;
     private static final String POSTGRES_CLASS_NAME = "org.postgresql.xa.PGXADataSource";
     private static final String HOST_SERVER = "localhost";
     private static final String PORT_NUMBER = "3002";
+
+    @Autowired
+    public DataSourceConverter(Map<String, String> clientPasswords) {
+        this.clientPasswords = clientPasswords;
+    }
 
     public DataSource entityToDataSource(DataSourceEntity dataSrcEntity) {
         if (checkPassword(dataSrcEntity)) {

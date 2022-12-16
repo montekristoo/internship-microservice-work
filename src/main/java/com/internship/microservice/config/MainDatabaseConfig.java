@@ -5,10 +5,8 @@ import com.internship.microservice.entity.DataSourceEntity;
 import com.internship.microservice.routing.RoutingDataSource;
 import com.internship.microservice.util.DataSourceConverter;
 import lombok.SneakyThrows;
-import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +15,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.jta.JtaTransactionManager;
 
 import javax.sql.DataSource;
-import java.util.Objects;
 
 
 @Configuration
@@ -74,11 +71,6 @@ public class MainDatabaseConfig {
         sessionFactoryBean.setDataSource(abstractRoutingDataSource());
         sessionFactoryBean.setTransactionFactory(new ManagedTransactionFactory());
         return sessionFactoryBean;
-    }
-
-    @Bean
-    public SqlSessionTemplate batchSqlSessionTemplate() throws Exception {
-        return new SqlSessionTemplate(Objects.requireNonNull(sessionFactoryBean().getObject()), ExecutorType.BATCH);
     }
 
 }
