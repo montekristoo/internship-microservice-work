@@ -34,8 +34,7 @@ public class DataSourceAspect {
     public void connectPointcut() {
     }
 
-    @Pointcut("execution(* com.internship.microservice.service.user.UserServiceImpl.insertUsersInGlobalTransaction(java" +
-            ".util.Map))")
+    @Pointcut("execution(* com.internship.microservice.service.user.UserServiceImpl.insertUsersInGlobalTransaction(java.util.Map))")
     public void closeAtomikosPoolsFromGlobalTransaction() {
     }
 
@@ -54,6 +53,7 @@ public class DataSourceAspect {
     @After("closeAtomikosPoolsFromGlobalTransaction()")
     public void afterGlobalTransaction(JoinPoint joinPoint) {
         Object[] field = joinPoint.getArgs();
+        log.info("Invoked");
         Map<String, List<UserEntity>> databases = (Map<String, List<UserEntity>>) field[0];
         databases.forEach((k, v) ->
                 routingDataSource.closeDataSource(k.toLowerCase()));

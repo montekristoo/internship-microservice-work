@@ -66,6 +66,7 @@ public class UserServiceTests {
         for (int i = 0; i < 10; i++) {
             usersFromUk.add(MOCK_USERS[1]);
         }
+        System.out.println(usersFromMd + " " + usersFromUk);
         userService.addUsers(usersFromMd);
         userService.addUsers(usersFromUk);
         dataSourceContext.setContext("md");

@@ -69,7 +69,7 @@ FROM current_database();
 
 TRUNCATE test_table;
 
-SELECT *
+SELECT COUNT(*)
 FROM pg_stat_activity;
 
 ALTER TABLE databases

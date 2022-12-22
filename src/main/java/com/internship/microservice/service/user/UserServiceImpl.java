@@ -5,6 +5,7 @@ import com.internship.microservice.exception.GlobalTransactionException;
 import com.internship.microservice.mapper.UserMapper;
 import com.internship.microservice.service.routing.RoutingService;
 import lombok.SneakyThrows;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService {
         users.forEach((user) -> {
             dbUsers.add(user);
             if (dbUsers.size() == BATCH_SIZE) {
-                insertUsersInGlobalTransaction(prepareUsers());
+                ((UserService) AopContext.currentProxy()).insertUsersInGlobalTransaction(prepareUsers());
                 dbUsers.clear();
             }
         });
@@ -57,7 +58,7 @@ public class UserServiceImpl implements UserService {
             userTransaction.commit();
         } catch (GlobalTransactionException e) {
             userTransaction.rollback();
-            throw new GlobalTransactionException(e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 

@@ -29,8 +29,12 @@ public class MainDatabaseConfig {
     @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;
     private final static String DEFAULT = "main_db";
+    private final DataSourceConverter dsConverter;
+
     @Autowired
-    private DataSourceConverter dsConverter;
+    public MainDatabaseConfig(DataSourceConverter dsConverter) {
+        this.dsConverter = dsConverter;
+    }
 
     @Bean
     @Primary

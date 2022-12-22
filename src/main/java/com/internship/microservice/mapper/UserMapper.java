@@ -10,9 +10,17 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
-    @Insert("INSERT INTO users (first_name, last_name, genre, date_of_birth, nationality, username, password) " +
-            "VALUES (#{firstName}, #{lastName}, #{genre}, #{dateOfBirth}, #{nationality}, #{username}, #{password})")
-    void addUser(UserEntity user);
+
+    @Insert({
+            "<script>" +
+                    "INSERT INTO users (first_name, last_name, genre, date_of_birth, nationality, username, password) " +
+                    "VALUES " +
+                    "<foreach item='item' index='index' collection='list' separator=','>" +
+                    "(#{item.firstName}, #{item.lastName}, #{item.genre}, #{item.dateOfBirth}, #{item.nationality}, #{item.username}, #{item.password})" +
+                    "</foreach>" +
+                    "</script>"
+    })
+    void addUsers(List<UserEntity> user);
 
     @Select("SELECT * FROM users")
     List<UserEntity> findAll();

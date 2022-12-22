@@ -165,3 +165,88 @@
   "username": "saxon9",
   "password": "5JMBj50"
 }]
+
+
+///
+
+[{
+  "firstName": "Andrea",
+  "lastName": "Perello",
+  "genre": "M",
+  "dateOfBirth": "2022-01-18",
+  "nationality": "UA",
+  "username": "aperello0",
+  "password": "3bwQnlE"
+}, {
+  "firstName": "Allen",
+  "lastName": "Nairne",
+  "genre": "M",
+  "dateOfBirth": "2022-06-06",
+  "nationality": "UA",
+  "username": "anairne1",
+  "password": "nubAts"
+}, {
+  "firstName": "Gussie",
+  "lastName": "Stirton",
+  "genre": "F",
+  "dateOfBirth": "2022-07-21",
+  "nationality": "UA",
+  "username": "gstirton2",
+  "password": "0kPGXTQiOwq9"
+}, {
+  "firstName": "Izzy",
+  "lastName": "Chaffin",
+  "genre": "M",
+  "dateOfBirth": "2022-07-19",
+  "nationality": "UA",
+  "username": "ichaffin3",
+  "password": "a1gZZJljQ"
+}, {
+  "firstName": "Christophorus",
+  "lastName": "Rawdales",
+  "genre": "M",
+  "dateOfBirth": "2022-08-27",
+  "nationality": "UA",
+  "username": "crawdales4",
+  "password": "tMkoqxq"
+}, {
+  "firstName": "Alejandrina",
+  "lastName": "Light",
+  "genre": "F",
+  "dateOfBirth": "2022-08-09",
+  "nationality": "UA",
+  "username": "alight5",
+  "password": "4du43nzy8L"
+}, {
+  "firstName": "Mureil",
+  "lastName": "Bowker",
+  "genre": "F",
+  "dateOfBirth": "2022-09-20",
+  "nationality": "UA",
+  "username": "mbowker6",
+  "password": "EMaRc10w"
+}, {
+  "firstName": "Blair",
+  "lastName": "Wickett",
+  "genre": "M",
+  "dateOfBirth": "2022-06-13",
+  "nationality": "UA",
+  "username": "bwickett7",
+  "password": "KPDAXJOm6dhG"
+}, {
+  "firstName": "Garreth",
+  "lastName": "Minear",
+  "genre": "M",
+  "dateOfBirth": "2022-09-17",
+  "nationality": "UA",
+  "username": "gminear8",
+  "password": "YzKCcDz"
+}, {
+  "firstName": "Wilone",
+  "lastName": "Blacktin",
+  "genre": "F",
+  "dateOfBirth": "2022-05-29",
+  "nationality": "UA",
+  "username": "wblacktin9",
+  "password": "tOZH52b"
+}]
