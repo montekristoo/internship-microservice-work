@@ -56,9 +56,10 @@ public class UserServiceImpl implements UserService {
                     routingService.connect(dbToConnect.toLowerCase(), users)
             );
             userTransaction.commit();
-        } catch (GlobalTransactionException e) {
+        } catch (RuntimeException e) {
             userTransaction.rollback();
             System.out.println(e.getMessage());
+            throw new GlobalTransactionException("Transaction failed");
         }
     }
 

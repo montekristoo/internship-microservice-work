@@ -4,7 +4,9 @@ import com.atomikos.icatch.jta.UserTransactionManager;
 import com.internship.microservice.entity.DataSourceEntity;
 import com.internship.microservice.routing.RoutingDataSource;
 import com.internship.microservice.util.DataSourceConverter;
+import lombok.AccessLevel;
 import lombok.SneakyThrows;
+import lombok.experimental.FieldDefaults;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +20,19 @@ import javax.sql.DataSource;
 
 
 @Configuration
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class MainDatabaseConfig {
 
     @Value("${spring.datasource.username}")
-    private String username;
+    String username;
     @Value("${spring.datasource.password}")
-    private String password;
+    String password;
     @Value("${spring.datasource.url}")
-    private String jdbcUrl;
+    String jdbcUrl;
     @Value("${spring.datasource.driver-class-name}")
-    private String driverClassName;
-    private final static String DEFAULT = "main_db";
-    private final DataSourceConverter dsConverter;
+    String driverClassName;
+    final static String DEFAULT = "main_db";
+    final DataSourceConverter dsConverter;
 
     @Autowired
     public MainDatabaseConfig(DataSourceConverter dsConverter) {

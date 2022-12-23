@@ -23,27 +23,6 @@ public class UserServiceTests {
     private UserService userService;
     @Autowired
     private UserController userController;
-    private static final UserEntity[] MOCK_USERS = {
-            UserEntity.builder()
-                    .firstName("Mock")
-                    .lastName("User")
-                    .genre("F")
-                    .dateOfBirth(Date.valueOf(("2020-03-01")))
-                    .nationality("MD")
-                    .username("mock_user")
-                    .password("password")
-                    .build(),
-            UserEntity.builder()
-                    .firstName("Mock")
-                    .lastName("User")
-                    .genre("F")
-                    .dateOfBirth(Date.valueOf(("2020-03-01")))
-                    .nationality("UK")
-                    .username("mock_user")
-                    .password("password")
-                    .build()
-
-    };
 
     @BeforeEach
     public void reset() {
@@ -61,10 +40,10 @@ public class UserServiceTests {
         List<UserEntity> usersFromMd = new ArrayList<>();
         List<UserEntity> usersFromUk = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            usersFromMd.add(MOCK_USERS[0]);
+            usersFromMd.add(getMdUser(String.valueOf(i), false));
         }
         for (int i = 0; i < 10; i++) {
-            usersFromUk.add(MOCK_USERS[1]);
+            usersFromUk.add(getUkUser(String.valueOf(i), false));
         }
         System.out.println(usersFromMd + " " + usersFromUk);
         userService.addUsers(usersFromMd);
@@ -83,16 +62,18 @@ public class UserServiceTests {
         List<UserEntity> usersFromMd = new ArrayList<>();
         List<UserEntity> usersFromUk = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            usersFromMd.add(MOCK_USERS[0]);
+            usersFromMd.add(getMdUser(String.valueOf(i), true));
         }
         for (int i = 0; i < 10; i++) {
-            usersFromUk.add(MOCK_USERS[1]);
+            usersFromUk.add(getUkUser(String.valueOf(i), false));
         }
         // action that causes the error and rollback global transaction
-        usersFromUk.get(0).setGenre("female");
-        //
         userService.addUsers(usersFromMd);
-        userService.addUsers(usersFromUk);
+        try {
+            userService.addUsers(usersFromUk);
+        } catch (RuntimeException r) {
+            System.out.println(r.getMessage());
+        }
         dataSourceContext.setContext("md");
         Assertions.assertEquals(userService.findAll().size(), 0);
         dataSourceContext.removeContext();
@@ -105,10 +86,35 @@ public class UserServiceTests {
     public void givenListWithUsersWithConstraintValidationError_thenThrowException() {
         List<UserEntity> users = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            users.add(MOCK_USERS[0]);
+            users.add(getMdUser(String.valueOf(i), false));
         }
         users.get(4).setGenre("Long genre name");
-        Assertions.assertThrows(ConstraintViolationException.class, () -> userController.addUsers(users));
+        Assertions.assertThrows(
+                ConstraintViolationException.class, () -> userController.addUsers(users));
+    }
+
+    public static UserEntity getMdUser(String password, boolean samePassword) {
+        return UserEntity.builder()
+                .firstName("Mock")
+                .lastName("User")
+                .genre("F")
+                .dateOfBirth(Date.valueOf(("2020-03-01")))
+                .nationality("MD")
+                .username("mock_user")
+                .password(samePassword ? "same" : password)
+                .build();
+    }
+
+    public static UserEntity getUkUser(String password, boolean samePassword) {
+        return UserEntity.builder()
+                .firstName("Mock")
+                .lastName("User")
+                .genre("F")
+                .dateOfBirth(Date.valueOf(("2020-03-01")))
+                .nationality("UK")
+                .username("mock_user")
+                .password(samePassword ? "same" : password)
+                .build();
     }
 
 }
