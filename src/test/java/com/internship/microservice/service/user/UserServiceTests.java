@@ -3,9 +3,10 @@ package com.internship.microservice.service.user;
 import com.internship.microservice.controller.UserController;
 import com.internship.microservice.entity.UserEntity;
 import com.internship.microservice.routing.DataSourceContext;
+import com.internship.microservice.util.PasswordUtils;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +25,7 @@ public class UserServiceTests {
     @Autowired
     private UserController userController;
 
-    @BeforeEach
+    @AfterEach
     public void reset() {
         dataSourceContext.setContext("md");
         userService.truncateUsers();
@@ -40,12 +41,11 @@ public class UserServiceTests {
         List<UserEntity> usersFromMd = new ArrayList<>();
         List<UserEntity> usersFromUk = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            usersFromMd.add(getMdUser(String.valueOf(i), false));
+            usersFromMd.add(getUser(false, "md"));
         }
         for (int i = 0; i < 10; i++) {
-            usersFromUk.add(getUkUser(String.valueOf(i), false));
+            usersFromUk.add(getUser(false, "uk"));
         }
-        System.out.println(usersFromMd + " " + usersFromUk);
         userService.addUsers(usersFromMd);
         userService.addUsers(usersFromUk);
         dataSourceContext.setContext("md");
@@ -62,10 +62,10 @@ public class UserServiceTests {
         List<UserEntity> usersFromMd = new ArrayList<>();
         List<UserEntity> usersFromUk = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            usersFromMd.add(getMdUser(String.valueOf(i), true));
+            usersFromMd.add(getUser(true, "md"));
         }
         for (int i = 0; i < 10; i++) {
-            usersFromUk.add(getUkUser(String.valueOf(i), false));
+            usersFromUk.add(getUser(false, "uk"));
         }
         // action that causes the error and rollback global transaction
         userService.addUsers(usersFromMd);
@@ -86,34 +86,22 @@ public class UserServiceTests {
     public void givenListWithUsersWithConstraintValidationError_thenThrowException() {
         List<UserEntity> users = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            users.add(getMdUser(String.valueOf(i), false));
+            users.add(getUser(false, "md"));
         }
         users.get(4).setGenre("Long genre name");
         Assertions.assertThrows(
                 ConstraintViolationException.class, () -> userController.addUsers(users));
     }
 
-    public static UserEntity getMdUser(String password, boolean samePassword) {
+    public static UserEntity getUser(boolean samePassword, String country) {
         return UserEntity.builder()
                 .firstName("Mock")
                 .lastName("User")
                 .genre("F")
                 .dateOfBirth(Date.valueOf(("2020-03-01")))
-                .nationality("MD")
+                .nationality(country.toUpperCase())
                 .username("mock_user")
-                .password(samePassword ? "same" : password)
-                .build();
-    }
-
-    public static UserEntity getUkUser(String password, boolean samePassword) {
-        return UserEntity.builder()
-                .firstName("Mock")
-                .lastName("User")
-                .genre("F")
-                .dateOfBirth(Date.valueOf(("2020-03-01")))
-                .nationality("UK")
-                .username("mock_user")
-                .password(samePassword ? "same" : password)
+                .password(samePassword ? "same" : PasswordUtils.generateRandomString())
                 .build();
     }
 

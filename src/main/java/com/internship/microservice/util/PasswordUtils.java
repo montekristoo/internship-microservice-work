@@ -1,6 +1,7 @@
 package com.internship.microservice.util;
 
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.util.Base64Utils;
 
 import javax.crypto.SecretKeyFactory;
@@ -48,6 +49,11 @@ public class PasswordUtils {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String generateRandomString() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\\\|;:\\'\\\",<.>/?";
+        return RandomStringUtils.random(10, characters);
     }
 
 }
