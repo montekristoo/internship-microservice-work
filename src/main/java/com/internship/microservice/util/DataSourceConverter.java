@@ -14,8 +14,8 @@ import java.util.Properties;
 public class DataSourceConverter {
     private final Map<String, String> clientPasswords;
     private static final String POSTGRES_CLASS_NAME = "org.postgresql.xa.PGXADataSource";
-    private static final String HOST_SERVER = "localhost";
-    private static final String PORT_NUMBER = "3002";
+    private static final String HOST_SERVER = "postgres-db";
+    private static final String PORT_NUMBER = "5432";
 
     @Autowired
     public DataSourceConverter(Map<String, String> clientPasswords) {

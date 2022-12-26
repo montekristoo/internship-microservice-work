@@ -3,9 +3,9 @@ package com.internship.microservice.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.io.ClassPathResource;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -19,8 +19,8 @@ public class DatabaseCredentialsConfig {
         Map<String, String> credentialsMap = new HashMap<>();
         Scanner scanner;
         try {
-            scanner = new Scanner(new File("passwords.txt"));
-        } catch (FileNotFoundException e) {
+            scanner = new Scanner(new ClassPathResource("/passwords.txt").getInputStream());
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         while(scanner.hasNext()) {

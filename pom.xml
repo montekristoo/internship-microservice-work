@@ -17,7 +17,7 @@
     <description>microservice</description>
 
     <properties>
-        <java.version>17</java.version>
+        <java.version>8</java.version>
         <springboot.version>2.7.5</springboot.version>
     </properties>
 
@@ -89,16 +89,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
             </plugin>
         </plugins>
+        <finalName>global-transaction-docker</finalName>
     </build>
 
 </project>

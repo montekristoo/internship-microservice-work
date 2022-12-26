@@ -2,10 +2,10 @@ package com.internship.microservice.entity;
 
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
 @Data
 @Builder
+@EqualsAndHashCode
 public class DataSourceEntity{
     private Long id;
     private String name;
@@ -15,15 +15,15 @@ public class DataSourceEntity{
     private String jdbcUrl;
     private String driverClassName;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof DataSourceEntity dataSourceEntity)) return false;
-        return id.equals(dataSourceEntity.id) && name.equals(dataSourceEntity.name);
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (!(o instanceof DataSourceEntity dataSourceEntity)) return false;
+//        return id.equals(dataSourceEntity.id) && name.equals(dataSourceEntity.name);
+//    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
-    }
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(id, name);
+//    }
 }
