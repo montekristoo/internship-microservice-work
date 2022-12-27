@@ -11,7 +11,6 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.UserTransaction;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,8 +21,6 @@ public class UserServiceImpl implements UserService {
     private final RoutingService routingService;
     private final UserTransaction userTransaction;
     private final UserMapper userMapper;
-    private static final List<UserEntity> dbUsers = new ArrayList<>();
-    private static final int BATCH_SIZE = 20;
 
     @Autowired
     public UserServiceImpl(RoutingService routingService, UserTransaction userTransaction, UserMapper userMapper) {
@@ -34,17 +31,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUsers(List<UserEntity> users) {
-        users.forEach((user) -> {
-            dbUsers.add(user);
-            if (dbUsers.size() == BATCH_SIZE) {
-                ((UserService) AopContext.currentProxy()).insertUsersInGlobalTransaction(prepareUsers());
-                dbUsers.clear();
-            }
-        });
+        ((UserService) AopContext.currentProxy())
+                .insertUsersInGlobalTransaction(prepareUsers(users));
     }
 
-    private Map<String, List<UserEntity>> prepareUsers() {
-        return dbUsers.stream()
+    private Map<String, List<UserEntity>> prepareUsers(List<UserEntity> users) {
+        return users.stream()
                 .collect(Collectors.groupingBy(UserEntity::getNationality));
     }
 

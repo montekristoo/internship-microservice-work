@@ -170,6 +170,7 @@ ALTER SYSTEM SET log_statement = 'all';
 SELECT set_config('log_destination', 'stderr', true);
 
 SHOW data_directory;
+select * from pg_stat_activity;
 
 
 

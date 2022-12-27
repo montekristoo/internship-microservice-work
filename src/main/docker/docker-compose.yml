@@ -3,8 +3,7 @@ version: '3.7'
 services:
   app:
       image: 'docker-spring-boot-global-tran:latest'
-      build:
-        context: .
+      build: .
       container_name: global-tran
       depends_on:
         - db
@@ -13,7 +12,7 @@ services:
         - SPRING_DATASOURCE_USERNAME=postgres
         - SPRING_DATASOURCE_PASSWORD=12345
       ports:
-        - 8080:8080
+        - "8080:8080"
 
   db:
     image: 'postgres:13.1-alpine'
